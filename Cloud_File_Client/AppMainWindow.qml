@@ -1,10 +1,10 @@
 ﻿import QtQuick
 import QtQuick.Window
 import FluentUI
+import "./global"
 
 FluWindow
 {
-
     id: mainWindow
 
     // 避免双屏情景下的宽度溢出
@@ -52,7 +52,6 @@ FluWindow
 
         mainWindow.hide()
         mainWindow.showMinimized()
-        mainWindow.showMaximized()
         mainWindow.height = heightCach
         mainWindow.width = widthCach
         mainWindow.show()
@@ -109,36 +108,28 @@ FluWindow
                     }
                 }
             }
-//            FluRemoteLoader{
-//                id:loader
-//                lazy: true
-//                anchors.fill: parent
-//                source: "https://zhu-zichu.gitee.io/Qt_168_LieflatPage.qml"
-//            }
         }
+
         front: Item{
             id:page_front
             visible: flipable.flipAngle !== 180
             anchors.fill: flipable
+
             FluNavigationView{
                 property int clickCount: 0
                 id:nav_view
                 width: parent.width
                 height: parent.height
                 z:999
-                //Stack模式，每次切换都会将页面压入栈中，随着栈的页面增多，消耗的内存也越多，内存消耗多就会卡顿，这时候就需要按返回将页面pop掉，释放内存。该模式可以配合FluPage中的launchMode属性，设置页面的启动模式
-                //                pageMode: FluNavigationViewType.Stack
-                //NoStack模式，每次切换都会销毁之前的页面然后创建一个新的页面，只需消耗少量内存，可以配合FluViewModel保存页面数据（推荐）
                 pageMode: FluNavigationViewType.NoStack
-                items: ItemsOriginal
                 footerItems:ItemsFooter
+
                 topPadding:{
-                    if(window.useSystemAppBar){
+                    if(mainWindow.useSystemAppBar){
                         return 0
                     }
                     return FluTools.isMacos() ? 20 : 0
                 }
-                displayMode:viewmodel_settings.displayMode
                 logo: ""
 //                title:"FluentUI"
 
@@ -148,18 +139,33 @@ FluWindow
                 }
                 autoSuggestBox:FluAutoSuggestBox{
                     iconSource: FluentIcons.Search
-                    items: ItemsOriginal.getSearchData()
-                    placeholderText: Lang.search
+
+                    placeholderText: "搜索"
                     onItemClicked:
                         (data)=>{
                             ItemsOriginal.startPageByItem(data)
                         }
                 }
                 Component.onCompleted: {
-
+                    AccountPage.navigationView = nav_view
+                    ItemsFooter.navigationView = nav_view
+                    ItemsFooter.paneItemMenu = nav_item_right_menu
                 }
             }
         }
     }
+    Component
+    {
+        id:nav_item_right_menu
+        FluMenu
+        {
+            id:menu
+            width: 130
+            FluMenuItem
+            {
 
+
+            }
+        }
+    }
 }

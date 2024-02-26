@@ -1,7 +1,7 @@
 ﻿import QtQuick
 import QtQuick.Window
 import FluentUI
-
+import "./global"
 Window
 {
     id: app
@@ -25,10 +25,12 @@ Window
         // FluTheme.primaryColor = FluColors.Orange
         // 路由表
         FluApp.routes = {
-            "/": "qrc:/Cloud_File_Client/AppMainWindow.qml"
+            "/": "qrc:/Cloud_File_Client/AppMainWindow.qml",
+            "/Account" : "qrc:/Cloud_File_Client/Page/AccountPage.qml"
         }
         // 初始化路径
         FluApp.initialRoute = "/"
         FluApp.run()
     }
+
 }

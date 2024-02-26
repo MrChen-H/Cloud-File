@@ -17,6 +17,10 @@ qt_add_qml_module(appCloud_File_Client
     VERSION 1.0
     QML_FILES AppMainWindow.qml
     QML_FILES Main.qml
+    QML_FILES Page/AccountPage.qml
+    QML_FILES global/ItemsFooter.qml
+    QML_FILES global/qmldir
+    QML_FILES global/ItemsOriginal.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -40,3 +44,4 @@ install(TARGETS appCloud_File_Client
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
