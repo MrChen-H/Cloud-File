@@ -10,6 +10,18 @@ FluWindow {
     width: 600
     height: 580
     fixSize: true
+    useSystemAppBar: true
     launchMode: FluWindowType.SingleTask
 
+    Component.onCompleted:
+    {
+        var heightCach = window.height
+        var widthCach = window.width
+
+        window.hide()
+        window.showMinimized()
+        window.height = heightCach
+        window.width = widthCach
+        window.show()
+    }
 }

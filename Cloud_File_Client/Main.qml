@@ -26,7 +26,9 @@ Window
         // 路由表
         FluApp.routes = {
             "/": "qrc:/Cloud_File_Client/AppMainWindow.qml",
-            "/Account" : "qrc:/Cloud_File_Client/Page/AccountPage.qml"
+            "/Account" : "qrc:/Cloud_File_Client/Page/AccountPage.qml",
+            "/MyFile" : "qrc:/Cloud_File_Client/Page/MyFile.qml",
+            "/AllFile" : "qrc:/Cloud_File_Client/Page/AllFile.qml"
         }
         // 初始化路径
         FluApp.initialRoute = "/"

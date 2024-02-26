@@ -22,7 +22,7 @@ FluObject{
 
 //    FluPaneItem{
 //        title:Lang.settings
-//        menuDelegate: paneItemMenu
+//
 //        icon:FluentIcons.Settings
 //        url:"qrc:/example/qml/page/T_Settings.qml"
 //        onTap:{
