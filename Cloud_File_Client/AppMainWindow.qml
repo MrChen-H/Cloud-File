@@ -156,11 +156,7 @@ FluWindow
                         }
                 }
                 Component.onCompleted: {
-                    ItemsOriginal.navigationView = nav_view
-                    ItemsOriginal.paneItemMenu = nav_item_right_menu
-                    ItemsFooter.navigationView = nav_view
-                    ItemsFooter.paneItemMenu = nav_item_right_menu
-                    setCurrentIndex(0)
+
                 }
             }
         }
