@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import FluentUI
 import QtQuick.Controls
 import QtQuick.Window
@@ -13,17 +13,61 @@ FluContentPage {
     }
     ListModel {
         id: myModel
-        ListElement { imageType: "vedio";fileName :"白虎美少女.mp3"}
-        ListElement { imageType: "vedio";fileName :"原神启动.mp3"}
-        ListElement { imageType: "picture";fileName :"高清大奶.jpg"}
-        ListElement { imageType: "picture";fileName :"原神.mp3"}
-        ListElement { imageType: "picture";fileName :"明日方舟.mp3"}
+        ListElement { imageType: "vedio";fileName :"美少女.mp4"}
+        ListElement { imageType: "vedio";fileName :"原神启动.mp4"}
+        ListElement { imageType: "picture";fileName :"高清.jpg"}
+        ListElement { imageType: "picture";fileName :"原神.jpg"}
+        ListElement { imageType: "picture";fileName :"明日方舟.jpg"}
         ListElement { imageType: "music";fileName :"原神.mp3"}
         ListElement { imageType: "music";fileName :"原神.mp3"}
         ListElement { imageType: "music";fileName :"原神.mp3"}
-        ListElement { imageType: "other";fileName :"原神.mp3"}
-        ListElement { imageType: "other";fileName :"原神.mp3"}
+        ListElement { imageType: "other";fileName :"原神.xsd"}
+        ListElement { imageType: "other";fileName :"原神.txt"}
         // 更多ListElement...
+    }
+    FluMenu{
+        id:menu
+        width: 130
+        FluMenuItem{
+            text: "下载"
+            visible: true
+            iconSource:FluentIcons.Download
+            onClicked: {
+
+            }
+        }
+        FluMenuItem{
+            text: "复制"
+            visible: true
+            iconSource:FluentIcons.Copy
+            onClicked: {
+
+            }
+        }
+        FluMenuItem{
+            text: "粘贴"
+            visible: true
+            iconSource:FluentIcons.Paste
+            onClicked: {
+
+            }
+        }
+        FluMenuItem{
+            text: "剪切"
+            visible: true
+            iconSource:FluentIcons.Cut
+            onClicked: {
+
+            }
+        }
+        FluMenuItem{
+            text: "删除"
+            visible: true
+            iconSource:FluentIcons.Delete
+            onClicked: {
+
+            }
+        }
     }
     GridView
     {
@@ -79,6 +123,20 @@ FluContentPage {
                 text: fileName
                 horizontalAlignment: Text.AlignHCenter
             }
+            MouseArea
+            {
+                acceptedButtons: Qt.AllButtons
+                anchors.fill: parent
+                onPressed:function(mouse)
+                {
+                    if(mouse.button === Qt.RightButton)
+                    {
+                        menu.popup()
+                    }
+                }
+            }
         }
+
+
     }
 }

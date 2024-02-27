@@ -1,8 +1,9 @@
-﻿import QtQuick
+﻿import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Window
 import FluentUI
 import "./global"
-Window
+ApplicationWindow
 {
     id: app
     flags: Qt.SplashScreen

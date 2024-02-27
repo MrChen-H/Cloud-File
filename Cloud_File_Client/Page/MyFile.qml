@@ -18,7 +18,7 @@ Item
 
         hideNavAppBar:true
         displayMode: FluNavigationViewType.Open
-        pageMode: FluNavigationViewType.NoStack
+        pageMode: FluNavigationViewType.Stack
         items: MyFileItems
 
         Component.onCompleted: {

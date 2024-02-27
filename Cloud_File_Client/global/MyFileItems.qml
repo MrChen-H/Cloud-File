@@ -4,7 +4,6 @@ import QtQuick
 import FluentUI
 
 FluObject{
-
     property var navigationView
     property var paneItemMenu
     FluPaneItem{
@@ -35,6 +34,7 @@ FluObject{
         id:item_picture
         title:"图片"
         icon:FluentIcons.Picture
+        url:"qrc:/Cloud_File_Client/Page/PictureFilePage.qml"
         onTap:{
             if(navigationView.getCurrentUrl()){
                 item_vdieo.count = 0
@@ -46,6 +46,7 @@ FluObject{
         id:item_music
         title:"音乐"
         icon:FluentIcons.MusicNote
+        url:"qrc:/Cloud_File_Client/Page/MusicFilePage.qml"
         onTap:{
             if(navigationView.getCurrentUrl()){
                 item_vdieo.count = 0

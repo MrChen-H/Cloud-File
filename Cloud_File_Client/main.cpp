@@ -1,9 +1,11 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-
+#include <qfont.h>
+#include "QQmlContext"
 
 int main(int argc, char *argv[])
 {
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
@@ -14,6 +16,5 @@ int main(int argc, char *argv[])
                 QCoreApplication::exit(-1);
         }, Qt::QueuedConnection);
     engine.load(url);
-
     return app.exec();
 }
