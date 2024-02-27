@@ -3,18 +3,18 @@ import FluentUI
 import "../global"
 Item
 {
-//    FluButton
-//    {
-//        text: "Test"
-//    }
-
     FluNavigationView{
         cellWidth:100
         property int clickCount: 0
         id:nav_view
-        width: 999900
-        height: 999900
+        width: 800
+        height: 400
+
         z:999
+
+        anchors{
+            fill: parent
+        }
 
         hideNavAppBar:true
         displayMode: FluNavigationViewType.Open

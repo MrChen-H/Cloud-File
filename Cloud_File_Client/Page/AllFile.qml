@@ -17,6 +17,7 @@ FluContentPage {
         clip: true
         boundsBehavior: GridView.StopAtBounds
         model:FluTheme.awesomeList()
+
         ScrollBar.vertical: FluScrollBar {}
         anchors{
             topMargin: 10

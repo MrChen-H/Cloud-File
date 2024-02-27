@@ -10,6 +10,7 @@ FluObject{
     FluPaneItem{
         id:item_otherFile
         title:"全部"
+        url:"qrc:/Cloud_File_Client/Page/AllFilePage.qml"
         icon:FluentIcons.FileExplorer
         onTap:{
             if(navigationView.getCurrentUrl()){
