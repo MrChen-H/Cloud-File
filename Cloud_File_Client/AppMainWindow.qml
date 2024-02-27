@@ -9,10 +9,10 @@ FluWindow
 
     // 避免双屏情景下的宽度溢出
 
-    minimumWidth: 600
+    minimumWidth: 800
     minimumHeight: 400
-    width: 800
-    height: 400
+    width: 1000
+    height: 500
     visible: true
     title: "Test Window"
 
@@ -65,6 +65,7 @@ FluWindow
 
         property int clickCount: 0
         id:nav_view
+
         width: parent.width
         height: parent.height
         cellWidth:130

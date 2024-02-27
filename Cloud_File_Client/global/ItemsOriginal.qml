@@ -15,6 +15,7 @@ FluObject{
             count: item_home.count
         }
         icon:FluentIcons.Home
+        url:"qrc:/Cloud_File_Client/Page/HomePage.qml"
         onTap:{
             if(navigationView.getCurrentUrl()){
                 item_home.count = 0
@@ -36,17 +37,17 @@ FluObject{
         }
     }
     FluPaneItem{
-        id:item_AllFile
-        title:"全部文件"
+        id:item_DownLoadState
+        title:"下载状态"
 
         infoBadge:FluBadge{
-            count: item_AllFile.count
+            count: item_DownLoadState.count
         }
         icon:FluentIcons.BulletedListMirrored
-        url:"qrc:/Cloud_File_Client/Page/AllFile.qml"
+        url:"qrc:/Cloud_File_Client/Page/DownLoadStatePage.qml"
         onTap:{
             if(navigationView.getCurrentUrl()){
-                item_AllFile.count = 0
+                item_DownLoadState.count = 0
             }
             navigationView.push(url)
         }
