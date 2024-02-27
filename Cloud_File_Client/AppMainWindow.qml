@@ -16,7 +16,7 @@ FluWindow
     visible: true
     title: "Test Window"
 
-    showDark: true
+    showDark: false
 
     closeListener: function (event) {
 
@@ -62,15 +62,17 @@ FluWindow
     }
 
     FluNavigationView{
+
         property int clickCount: 0
         id:nav_view
         width: parent.width
         height: parent.height
+        cellWidth:130
         z:999
         pageMode: FluNavigationViewType.NoStack
         items: ItemsOriginal
         footerItems:ItemsFooter
-        displayMode: FluNavigationViewType.Compact
+        displayMode: FluNavigationViewType.Open
         hideNavAppBar: true
         topPadding:{
             if(mainWindow.useSystemAppBar){
@@ -87,4 +89,5 @@ FluWindow
             ItemsOriginal.navigationView = nav_view
         }
     }
+
 }

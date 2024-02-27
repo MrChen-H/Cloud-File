@@ -25,6 +25,7 @@ qt_add_qml_module(appCloud_File_Client
     QML_FILES Page/AllFile.qml
     QML_FILES global/MyFileItems.qml
     QML_FILES Page/VideoPage.qml
+    QML_FILES
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

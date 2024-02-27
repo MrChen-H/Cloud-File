@@ -1,4 +1,4 @@
-pragma Singleton
+﻿pragma Singleton
 
 import QtQuick
 import FluentUI
@@ -7,6 +7,17 @@ FluObject{
 
     property var navigationView
     property var paneItemMenu
+    FluPaneItem{
+        id:item_otherFile
+        title:"全部"
+        icon:FluentIcons.FileExplorer
+        onTap:{
+            if(navigationView.getCurrentUrl()){
+                item_vdieo.count = 0
+            }
+            navigationView.push(url)
+        }
+    }
     FluPaneItem{
         id:item_vdieo
         title:"视频"
@@ -41,15 +52,5 @@ FluObject{
             navigationView.push(url)
         }
     }
-    FluPaneItem{
-        id:item_otherFile
-        title:"其他文件"
-        icon:FluentIcons.FileExplorer
-        onTap:{
-            if(navigationView.getCurrentUrl()){
-                item_vdieo.count = 0
-            }
-            navigationView.push(url)
-        }
-    }
+
 }

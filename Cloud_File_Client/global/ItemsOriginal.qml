@@ -7,10 +7,10 @@ FluObject{
 
     property var navigationView
     property var paneItemMenu
+
     FluPaneItem{
         id:item_home
         title:"主页"
-
         infoBadge:FluBadge{
             count: item_home.count
         }
