@@ -3,12 +3,28 @@ import FluentUI
 import QtQuick.Controls
 import QtQuick.Window
 import QtQuick.Layouts
-import ViewModel 1.0
+import DownLoadStateModel
 
 FluContentPage {
     signal signalPauseClick(var beClickItem)
     signal signalPlayClick(var beClickItem)
     signal signaldeleteClick(var beClickItem)
+    FluContentDialog {
+        id: make_sure_dialog
+        title: "全部移除"
+        message: "确定要移除所有下载任务吗?这将会中断正在下载的项目"
+        buttonFlags:FluContentDialogType.NeutralButton
+                     | FluContentDialogType.PositiveButton
+
+        positiveText: "确定"
+        neutralText: "取消"
+
+        onPositiveClicked: {
+            DownLoadStateModel.removeAll();
+            showInfo("已全部取消");
+        }
+    }
+
     Row
     {
         spacing:10
@@ -44,10 +60,12 @@ FluContentPage {
                 visible: deleteAll.hovered
                 delay: 1000
             }
+            onClicked:
+            {
+                make_sure_dialog.open()
+            }
         }
     }
-
-
 
     ListView {
         width: parent.width
@@ -63,25 +81,13 @@ FluContentPage {
         }
 
         highlightFollowsCurrentItem: true
-        model: ListModel
-        {
-            id:testModel
-            ListElement{name:"我我我.mp3";type:"mp3"}
-            ListElement{name:"banana.mp4";type:"mp4"}
-            ListElement{name:"cherry.jpg";type:"jpg"}
-            ListElement{name:"date.txt";type:"txt"}
-
-        }
-
-//        model: downLoadInfoModel
+        model: DownLoadStateModel
         ScrollBar.vertical: FluScrollBar {}
-
-
 
         delegate: FluArea
         {
             id:downLoadProcessItem
-            width: parent.width
+            width: downLoadInfoList.width
             height: 60
             FluIcon
             {
@@ -91,19 +97,19 @@ FluContentPage {
                 x:10
                 Component.onCompleted:
                 {
-                    if(type === "mp3")
+                    if(fileType === "mp3")
                     {
                         iconSource = FluentIcons.MusicNote
                     }
-                    else if(type === "mp4")
+                    else if(fileType === "mp4")
                     {
                         iconSource = FluentIcons.Video
                     }
-                    else if(type === 'jpg')
+                    else if(fileType === 'jpg')
                     {
                         iconSource = FluentIcons.Picture
                     }
-                    else if(type === 'txt')
+                    else if(fileType === 'txt')
                     {
                         iconSource = FluentIcons.Document
                     }
@@ -117,24 +123,18 @@ FluContentPage {
                 x:fileIcon.x+fileIcon.width+10
                 width:200
                 elide: Text.ElideRight
-                text: name
+                text: fileName
                 horizontalAlignment: Text.AlignLeft
-                MouseArea
-                {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onEntered: tooltip.visible = true
-                    onExited: tooltip.visible = false
-                }
+
             }
             FluText {
-                id:downLoadSpeed
+                id:downLoadSpeedText
                 font.pixelSize: 11
                 y:item_name.y+20
                 x:fileIcon.x+fileIcon.width+10
                 width:200
                 wrapMode: Text.WrapAnywhere
-                text:"0B/1G"
+                text:countSize
                 horizontalAlignment: Text.AlignLeft
                 opacity: 0.7
             }
@@ -180,7 +180,7 @@ FluContentPage {
                             signalPauseClick(downLoadProcessItem)
                             downLoadProcess.indeterminate = false
                             downLoadProcess.value = 0.5
-                            stateText.text  = "0 kb/s"
+                            stateText.text  = downLoadSpeed
 
                         }
                         else

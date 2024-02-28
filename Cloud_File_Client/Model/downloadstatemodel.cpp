@@ -18,6 +18,14 @@ DownLoadStateModel *DownLoadStateModel::getInstance()
     {
         threadLock->lock();
         Instance = new DownLoadStateModel();
+        DownLoadInfo info1;
+        info1.downLoadSize = 1000;
+        info1.downLoadSpeed = 1200;
+        info1.countSize=100000;
+        info1.fileName="test.txt";
+        info1.fileType="txt";
+        info1.infoIndex = 0;
+        Instance->append(info1);
         threadLock->unlock();
     }
     return Instance;
@@ -35,7 +43,8 @@ QHash<int, QByteArray> DownLoadStateModel::roleNames() const
     roles[DownLoadSizeRole] = "downLoadSize";
     roles[DownLoadSpeedRole] = "downLoadSpeed";
     roles[CountSizeRole] = "countSize";
-    roles[InfoIndexRole] = "infoIndexRole";
+    roles[InfoIndexRole] = "infoIndex";
+    roles[FileTypeRole] = "fileType";
     return roles;
 }
 
@@ -58,6 +67,8 @@ QVariant DownLoadStateModel::data(const QModelIndex &index, int role) const
         return data.countSize;
     case InfoIndexRole:
         return data.infoIndex;
+    case FileTypeRole:
+        return data.fileType;
     default:
         return QVariant();
     }
@@ -77,23 +88,30 @@ void DownLoadStateModel::updateInfo(int index, DownLoadInfo &Newinfo)
 
 void DownLoadStateModel::append(DownLoadInfo& info)
 {
-//    emit beginInsertRows(QModelIndex(),downLoadInfo.size(),downLoadInfo.size());
-//    downLoadInfo.append(info);
-//    emit endInsertRows();
+    emit beginInsertRows(QModelIndex(),downLoadInfo.size(),downLoadInfo.size());
+    downLoadInfo.append(info);
+    emit endInsertRows();
 }
 
 void DownLoadStateModel::remove(int index)
 {
-//    for(auto &info : downLoadInfo)
-//    {
-//        if(info.infoIndex == index)
-//        {
-//            emit beginRemoveRows(QModelIndex(),index,index);
-//            downLoadInfo.removeOne(info);
-//            emit endRemoveRows();
-//            break;
-//        }
-    //    }
+    for(const auto &info : downLoadInfo)
+    {
+        if(info.infoIndex == index)
+        {
+            emit beginRemoveRows(QModelIndex(),index,index);
+            downLoadInfo.removeAt(index);
+            emit endRemoveRows();
+            break;
+        }
+    }
+}
+
+void DownLoadStateModel::removeAll()
+{
+    emit beginResetModel();
+    downLoadInfo.clear();
+    emit endResetModel();
 }
 
 DownLoadStateModel::DownLoadStateModel(QObject *parent)

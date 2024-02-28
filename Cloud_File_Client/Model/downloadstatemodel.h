@@ -19,7 +19,7 @@ class DownLoadStateModel : public QAbstractListModel
     Q_OBJECT
 public:
     ~DownLoadStateModel();
-    static DownLoadStateModel *getInstance();
+    Q_INVOKABLE static DownLoadStateModel *getInstance();
     DownLoadStateModel(DownLoadStateModel const&) = delete;
 
     virtual int rowCount(const QModelIndex &parent) const override;
@@ -30,6 +30,7 @@ public:
 public:
     Q_INVOKABLE void append(DownLoadInfo& info);
     Q_INVOKABLE void remove(int index);
+    Q_INVOKABLE void removeAll();
 
 private:
     enum DataRoles{
@@ -37,7 +38,8 @@ private:
         DownLoadSizeRole,
         CountSizeRole,
         DownLoadSpeedRole,
-        InfoIndexRole
+        InfoIndexRole,
+        FileTypeRole
     };
 
 private:
@@ -47,7 +49,6 @@ private:
     QList<DownLoadInfo> downLoadInfo;
 
 signals:
-
 };
 
 #endif // DOWNLOADSTATEMODEL_H
