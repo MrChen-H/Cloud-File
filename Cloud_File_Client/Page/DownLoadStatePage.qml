@@ -76,11 +76,7 @@ FluContentPage {
         {
             bottom:parent.bottom
         }
-        highlight:Item {
 
-        }
-
-        highlightFollowsCurrentItem: true
         model: DownLoadStateModel
         ScrollBar.vertical: FluScrollBar {}
 

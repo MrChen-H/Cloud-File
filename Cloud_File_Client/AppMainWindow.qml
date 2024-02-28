@@ -51,6 +51,10 @@ FluWindow
     Component.onCompleted:
     {
         nav_view.setCurrentIndex(0)
+        mainWindow.hide()
+        showMinimized()
+        showMaximized()
+        mainWindow.show()
     }
 
     FluNavigationView{

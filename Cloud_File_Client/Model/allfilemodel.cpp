@@ -1,6 +1,6 @@
 #include "allfilemodel.h"
 
-AllFileModel * AllFileModel::Instance = new AllFileModel();
+AllFileModel * AllFileModel::Instance = nullptr;
 std::mutex* AllFileModel::thread_lock = new std::mutex();
 
 AllFileModel::~AllFileModel()

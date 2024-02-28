@@ -60,7 +60,7 @@ FluContentPage {
                 horizontalAlignment: Text.AlignHCenter
                 Component.onCompleted:
                 {
-                    if(imageType !== "vedio")
+                    if(fileType !== "vedio")
                     {
                         destroy()
                     }
