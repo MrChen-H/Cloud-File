@@ -40,7 +40,7 @@ int main()
         FCGX_FPrintF(output, "Content-type: application/json\r\n"
                              "Charset: utf-8\r\n"
                              "\r\n"
-                            "%s",reply);   
+                             "{""testServer"":""success""}");   
     }
     return 0;
 }
