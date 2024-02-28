@@ -3,6 +3,7 @@ import FluentUI
 import QtQuick.Controls
 import QtQuick.Window
 import QtQuick.Layouts
+import ViewModel 1.0
 
 FluContentPage {
     signal signalPauseClick(var beClickItem)
@@ -51,13 +52,18 @@ FluContentPage {
     ListView {
         width: parent.width
         height:parent.height-80
+        id:downLoadInfoList
+        focus: true
         anchors
         {
             bottom:parent.bottom
         }
+        highlight:Item {
 
+        }
+
+        highlightFollowsCurrentItem: true
         model: ListModel
-
         {
             id:testModel
             ListElement{name:"我我我.mp3";type:"mp3"}
@@ -66,6 +72,8 @@ FluContentPage {
             ListElement{name:"date.txt";type:"txt"}
 
         }
+
+//        model: downLoadInfoModel
         ScrollBar.vertical: FluScrollBar {}
 
 
@@ -141,7 +149,6 @@ FluContentPage {
                 }
                 indeterminate: false
 
-
             }
             FluText {
                 id:stateText
@@ -184,6 +191,7 @@ FluContentPage {
                             stateText.text ="暂停中"
 
                         }
+
                     }
                 }
                 FluIconButton
@@ -197,6 +205,5 @@ FluContentPage {
                 }
             }
         }
-
     }
 }

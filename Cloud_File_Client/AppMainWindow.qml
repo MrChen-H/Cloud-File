@@ -8,7 +8,6 @@ FluWindow
     id: mainWindow
 
     // 避免双屏情景下的宽度溢出
-
     minimumWidth: 800
     minimumHeight: 400
     width: 1000
@@ -50,14 +49,6 @@ FluWindow
 
     Component.onCompleted:
     {
-        var heightCach = mainWindow.height
-        var widthCach = mainWindow.width
-
-        mainWindow.hide()
-        mainWindow.showMinimized()
-        mainWindow.height = heightCach
-        mainWindow.width = widthCach
-        mainWindow.show()
         nav_view.setCurrentIndex(0)
     }
 
