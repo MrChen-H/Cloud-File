@@ -28,11 +28,6 @@ AllFileModel *AllFileModel::getInstance()
         thread_lock->lock();
         Instance = new AllFileModel();
         FileInfo info;
-        info.fileName = "test.mp3";
-        info.fileSize = 1200;
-        info.fileType = "vedio";
-        info.fileUrl="";
-        info.index=0;
         Instance->append(info);
         thread_lock->unlock();
     }
