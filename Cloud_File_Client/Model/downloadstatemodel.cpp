@@ -5,7 +5,16 @@ std::mutex* DownLoadStateModel::threadLock = new std::mutex();
 
 DownLoadStateModel::~DownLoadStateModel()
 {
-
+    if(Instance!=nullptr)
+    {
+        delete Instance;
+        Instance = nullptr;
+    }
+    if(threadLock!=nullptr)
+    {
+        delete threadLock;
+        threadLock = nullptr;
+    }
 }
 
 DownLoadStateModel *DownLoadStateModel::getInstance()
@@ -18,14 +27,14 @@ DownLoadStateModel *DownLoadStateModel::getInstance()
     {
         threadLock->lock();
         Instance = new DownLoadStateModel();
-        DownLoadInfo info1;
-        info1.downLoadSize = 1000;
-        info1.downLoadSpeed = 1200;
-        info1.countSize=100000;
-        info1.fileName="test.txt";
-        info1.fileType="txt";
-        info1.infoIndex = 0;
-        Instance->append(info1);
+        DownLoadInfo info;
+        info.countSize = 1000;
+        info.downLoadSize = 1000;
+        info.downLoadSpeed = 100;
+        info.fileName = "test.txt";
+        info.infoIndex = 0;
+        info.fileType = "txt";
+        Instance->append(info);
         threadLock->unlock();
     }
     return Instance;
@@ -95,16 +104,15 @@ void DownLoadStateModel::append(DownLoadInfo& info)
 
 void DownLoadStateModel::remove(int index)
 {
-    for(const auto &info : downLoadInfo)
+    emit beginRemoveRows(QModelIndex(),index,index);
+    downLoadInfo.removeAt(index);
+    emit endRemoveRows();
+
+    for(int i=0;i<this->downLoadInfo.size();i++)
     {
-        if(info.infoIndex == index)
-        {
-            emit beginRemoveRows(QModelIndex(),index,index);
-            downLoadInfo.removeAt(index);
-            emit endRemoveRows();
-            break;
-        }
+        downLoadInfo[i].infoIndex = i;
     }
+
 }
 
 void DownLoadStateModel::removeAll()

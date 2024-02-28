@@ -3,6 +3,7 @@ import QtQuick.Window
 import FluentUI
 import "./global"
 
+
 FluWindow
 {
     id: mainWindow

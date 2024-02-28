@@ -3,7 +3,7 @@ import FluentUI
 import QtQuick.Controls
 import QtQuick.Window
 import QtQuick.Layouts
-
+import AllFileModel
 FluContentPage {
     id: allFilePage
     property var selectItems: []
@@ -12,6 +12,8 @@ FluContentPage {
         iconSource: FluentIcons.Search
         placeholderText: "搜索文件"
     }
+
+
     ListModel {
         id: myModel
         ListElement { imageType: "vedio";fileName :"美少女.mp4"}
@@ -83,6 +85,7 @@ FluContentPage {
             visible: true
             iconSource:FluentIcons.Delete
             onClicked: {
+                AllFileModel.test()
                 if(selectItems.length === 0)
                 {
                     showWarning("没有选中的文件")
@@ -110,13 +113,14 @@ FluContentPage {
     }
     GridView
     {
+
         id:grid_view
         cellWidth: 80
         cellHeight: 80
         clip: true
         boundsBehavior: GridView.StopAtBounds
         ScrollBar.vertical: FluScrollBar {}
-        model:myModel
+        model:AllFileModel
         anchors{
             topMargin: 10
             top:text_box.bottom
@@ -136,19 +140,19 @@ FluContentPage {
                 anchors.horizontalCenter: parent.horizontalCenter
                 Component.onCompleted:
                 {
-                    if(imageType === "vedio")
+                    if(fileType === "vedio")
                     {
                         iconSource = FluentIcons.Video
                     }
-                    else if(imageType === "picture")
+                    else if(fileType === "picture")
                     {
                         iconSource = FluentIcons.Picture
                     }
-                    else if(imageType === "music")
+                    else if(fileType === "music")
                     {
                         iconSource = FluentIcons.MusicNote
                     }
-                    else if(imageType === "other")
+                    else if(fileType === "other")
                     {
                         iconSource = FluentIcons.FileExplorer
                     }
@@ -178,7 +182,7 @@ FluContentPage {
             {
                 acceptedButtons: Qt.AllButtons
                 anchors.fill: parent
-
+                z:999999
                 /// 这段逻辑是实现item之间的选中状态改变
                 onPressed:function(mouse)
                 {

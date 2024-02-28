@@ -3,13 +3,13 @@ import QtQuick.Controls 2.15
 import QtQuick.Window
 import FluentUI
 import "./global"
+
 ApplicationWindow
 {
     id: app
     flags: Qt.SplashScreen
     // 一定要是false
     visible: false
-
     Component.onCompleted: {
         // 初始化FluApp，实质是记录了app这个根组件实例用以获取QQmlEngine
         // 然后从engine中以initialRoute文本找到用户定义的组件.qml(在这里是AppMainWindow.qml)

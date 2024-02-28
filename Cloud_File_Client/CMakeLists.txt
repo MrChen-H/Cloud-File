@@ -6,6 +6,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 6.2 REQUIRED COMPONENTS Quick)
+set(CMAKE_CXX_STANDARD 20)
 
 
 qt_add_executable(appCloud_File_Client
@@ -32,6 +33,8 @@ qt_add_qml_module(appCloud_File_Client
     QML_FILES Page/HomePage.qml
     SOURCES Model/downloadstatemodel.h Model/downloadstatemodel.cpp
     RESOURCES font.qrc
+    SOURCES Model/threadloop.h Model/threadloop.cpp
+    SOURCES Model/allfilemodel.h Model/allfilemodel.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
