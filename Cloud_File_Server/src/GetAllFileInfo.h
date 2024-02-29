@@ -24,12 +24,12 @@ std::string GetPathInfo(int Data_size, FCGX_Stream *data_strean,std::string& pat
 
     for(auto info : fileInfo)
     {
-        res_json[info.file_name.second][info.file_name.first] = info.file_name.second;
-        res_json[info.file_name.second][info.id.first] = info.id.second;
-        res_json[info.file_name.second][info.file_size.first] = info.file_size.second;
-        res_json[info.file_name.second][info.type_name.first] = info.type_name.second;
-        res_json[info.file_name.second][info.type_comment.first] = info.type_comment.second;
-        res_json[info.file_name.second][info.file_dir.first] = info.file_dir.second;
+        res_json[info.id.second][info.file_name.first] = info.file_name.second;
+        res_json[info.id.second][info.id.first] = info.id.second;
+        res_json[info.id.second][info.file_size.first] = info.file_size.second;
+        res_json[info.id.second][info.type_name.first] = info.type_name.second;
+        res_json[info.id.second][info.type_comment.first] = info.type_comment.second;
+        res_json[info.id.second][info.file_dir.first] = info.file_dir.second;
     }
     if(res_json.empty())
     {
