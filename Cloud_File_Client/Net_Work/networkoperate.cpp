@@ -10,6 +10,7 @@ NetWorkOperation::NetWorkOperation()
 
     connect(this->m_netWorkManager,&QNetworkAccessManager::finished,this,[=](QNetworkReply * reply){
         qDebug()<<reply->readAll();
+        emit signalRequestEnd(reply);
     });
 }
 

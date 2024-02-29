@@ -20,8 +20,6 @@ ApplicationWindow
         FluTheme.darkMode = FluThemeType.Light
         // 开启动画
         FluTheme.enableAnimation = true
-        // 开启文本本地渲染
-        FluTheme.nativeText = true
         // 切换主题色
         // FluTheme.primaryColor = FluColors.Orange
         // 路由表

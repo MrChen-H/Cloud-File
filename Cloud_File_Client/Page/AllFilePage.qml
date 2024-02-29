@@ -33,6 +33,7 @@ FluContentPage {
         // 更多ListElement...
     }
 
+
     FluMenu{
         id:menu
         width: 130
@@ -131,6 +132,13 @@ FluContentPage {
             left: parent.left
             right: parent.right
             bottom: parent.bottom
+        }
+        FluStatusLayout{
+            id:statusPage
+            anchors.fill: parent
+            color: "transparent"
+            statusMode: FluStatusLayoutType.Loading
+            visible: false
         }
         delegate:Item
         {
@@ -250,6 +258,17 @@ FluContentPage {
             {
                 newFile.visible = isHide
                 newFloder.visible = isHide
+            }
+        }
+        onCountChanged:
+        {
+            if(count === 0)
+            {
+                statusPage.visible = true
+            }
+            else
+            {
+                statusPage.visible = false
             }
         }
     }

@@ -24,7 +24,7 @@ public:
     Q_INVOKABLE void get(QUrl url);
 signals:
     void signalRequestStart();
-    void signalRequestEnd();
+    void signalRequestEnd(QNetworkReply* reply);
 private:
     QNetworkAccessManager* m_netWorkManager;
 };
