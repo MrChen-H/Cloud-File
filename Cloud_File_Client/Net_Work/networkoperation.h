@@ -1,10 +1,11 @@
-#ifndef NETWORKOPERATE_H
-#define NETWORKOPERATE_H
+#ifndef NETWORKOPERATION_H
+#define NETWORKOPERATION_H
 
 #include <QObject>
 #include <qnetworkaccessmanager.h>
 #include "json.hpp"
 #include "QTHread"
+
 using json = nlohmann::json;
 
 class NetWorkOperation : public QObject
@@ -16,17 +17,16 @@ public:
 
     /**
      * @brief get
-     * @param url 请求的URL
-     * @param result 返回的json格式消息
-     * @param errorInfo 错误信息
-     * @return 状态码
+     * @param url
      */
     Q_INVOKABLE void get(QUrl url);
 signals:
     void signalRequestStart();
-    void signalRequestEnd(QNetworkReply* reply);
+    void signalRequestEnd(QString getData,int statuCode,QString errorString);
+
+
 private:
     QNetworkAccessManager* m_netWorkManager;
 };
 
-#endif // NETWORKOPERATE_H
+#endif // NETWORKOPERATION_H

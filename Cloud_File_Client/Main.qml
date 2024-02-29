@@ -7,6 +7,7 @@ import "./global"
 ApplicationWindow
 {
     id: app
+    objectName: 'app'
     flags: Qt.SplashScreen
     // 一定要是false
     visible: false

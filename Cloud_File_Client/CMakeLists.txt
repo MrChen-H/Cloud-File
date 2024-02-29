@@ -35,8 +35,9 @@ qt_add_qml_module(appCloud_File_Client
     RESOURCES font.qrc
     SOURCES Net_Work/threadloop.h Net_Work/threadloop.cpp
     SOURCES Model/allfilemodel.h Model/allfilemodel.cpp
-    SOURCES Net_Work/networkoperate.h Net_Work/networkoperate.cpp
+    SOURCES Net_Work/networkoperation.h Net_Work/networkoperation.cpp
     SOURCES Work_Thread/downloadthread.h Work_Thread/downloadthread.cpp
+    SOURCES global/globalstatus.h global/globalstatus.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

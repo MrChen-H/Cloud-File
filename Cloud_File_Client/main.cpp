@@ -1,17 +1,16 @@
-﻿#include <QGuiApplication>
+﻿                                           #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <qfont.h>
 #include <qfontdatabase.h>
 #include <Model/downloadstatemodel.h>
 #include <Model/allfilemodel.h>
 #include "QQmlContext"
-#include "Net_Work/networkoperate.h"
+#include "Net_Work/networkoperation.h"
+#include "./Global/globalstatus.h"
 int main(int argc, char *argv[])
 {
 
     QGuiApplication app(argc, argv);
-
-    NetWorkOperation NetWork;
 
     QQmlApplicationEngine engine;
     qmlRegisterSingletonType<DownLoadStateModel>("DownLoadStateModel", 1, 0, "DownLoadStateModel", [](QQmlEngine *engine, QJSEngine *) -> QObject* {
@@ -22,8 +21,11 @@ int main(int argc, char *argv[])
         Q_UNUSED(engine)
         return AllFileModel::getInstance();
     });
-
-    engine.rootContext()->setContextProperty("NetWork",&NetWork);
+    qmlRegisterSingletonType<GlobalStatus>("GlobalStatus", 1, 0, "GlobalStatus", [](QQmlEngine *engine, QJSEngine *) -> QObject* {
+        Q_UNUSED(engine)
+        return GlobalStatus::getInstance();
+    });
+    qmlRegisterType<NetWorkOperation>("NetWorkOperation", 1, 0, "NetWorkOperation");
 
     const QUrl url(u"qrc:/Cloud_File_Client/Main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
@@ -32,6 +34,6 @@ int main(int argc, char *argv[])
                 QCoreApplication::exit(-1);
         }, Qt::QueuedConnection);
     engine.load(url);
-//    engine.rootContext()->setContextProperty("FontDefault");
+    GlobalStatus::getInstance()->setEngine(&engine);
     return app.exec();
 }

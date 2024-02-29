@@ -7,6 +7,7 @@ import "./global"
 FluWindow
 {
     id: mainWindow
+    objectName: 'mainWindow'
 
     // 避免双屏情景下的宽度溢出
     minimumWidth: 800

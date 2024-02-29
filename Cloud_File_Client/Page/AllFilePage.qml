@@ -4,35 +4,53 @@ import QtQuick.Controls
 import QtQuick.Window
 import QtQuick.Layouts
 import AllFileModel
+import NetWorkOperation
 FluContentPage {
     id: allFilePage
+    objectName: 'allFilePage'
     property var selectItems: []
     FluAutoSuggestBox{
         id:text_box
         iconSource: FluentIcons.Search
         placeholderText: "搜索文件"
     }
+    NetWorkOperation
+    {
+        id:netWork
+    }
+
 
     Component.onCompleted:
     {
-        NetWork.get("eee")
+        netWork.get("http://111.229.83.106/GetFileInfo")
     }
 
-    ListModel {
-        id: myModel
-        ListElement { imageType: "vedio";fileName :"美少女.mp4"}
-        ListElement { imageType: "vedio";fileName :"原神启动.mp4"}
-        ListElement { imageType: "picture";fileName :"高清.jpg"}
-        ListElement { imageType: "picture";fileName :"原神.jpg"}
-        ListElement { imageType: "picture";fileName :"明日方舟.jpg"}
-        ListElement { imageType: "music";fileName :"原神.mp3"}
-        ListElement { imageType: "music";fileName :"原神.mp3"}
-        ListElement { imageType: "music";fileName :"原神.mp3"}
-        ListElement { imageType: "other";fileName :"原神.xsd"}
-        ListElement { imageType: "other";fileName :"原神.txt"}
-        // 更多ListElement...
+    Connections
+    {
+        target: netWork
+        function onSignalRequestStart()
+        {
+            statusPage.statusMode = FluStatusLayoutType.Loading
+        }
+        function onSignalRequestEnd(getData,errorCode,errorString)
+        {
+            if (100 > errorCode||errorCode < 200 || errorCode >= 300)
+            {
+                statusPage.errorText = errorString
+                statusPage.statusMode = FluStatusLayoutType.Error
+            }
+            else if(errorCode >= 200 && errorCode <= 300)
+            {
+                statusPage.statusMode = FluStatusLayoutType.Success
+            }
+            else
+            {
+                statusPage.errorText = errorString
+                statusPage.statusMode = FluStatusLayoutType.Error
+            }
+            console.log("http:",errorCode)
+        }
     }
-
 
     FluMenu{
         id:menu
@@ -137,7 +155,7 @@ FluContentPage {
             id:statusPage
             anchors.fill: parent
             color: "transparent"
-            statusMode: FluStatusLayoutType.Loading
+            statusMode: FluStatusLayoutType.Empty
             visible: false
         }
         delegate:Item
@@ -270,6 +288,21 @@ FluContentPage {
             {
                 statusPage.visible = false
             }
+        }
+    }
+    function setLoading(isLoading)
+    {
+        if(isLoading === true)
+        {
+            statusPage.statusMode = FluStatusLayoutType.Loading
+        }
+        else if(grid_view.count === 0)
+        {
+            statusPage.statusMode = FluStatusLayoutType.Empty
+        }
+        else
+        {
+            statusPage.statusMode = FluStatusLayoutType.Success
         }
     }
 
