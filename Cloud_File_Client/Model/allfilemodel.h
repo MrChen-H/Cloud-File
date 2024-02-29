@@ -45,7 +45,6 @@ public:
     Q_INVOKABLE void test(){qDebug()<<"Test";}
 private:
     static AllFileModel* Instance;
-    static std::mutex* thread_lock;
     QList<FileInfo> file_list;
 };
 

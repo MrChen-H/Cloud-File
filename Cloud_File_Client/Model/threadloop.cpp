@@ -1,6 +1,4 @@
 #include "threadloop.h"
-
-
 template<class T>
 bool SafeQueue<T>::empty() // 返回队列是否为空
 {
@@ -56,7 +54,7 @@ void ThreadPool::ThreadWorker::operator()()
             {
                 m_pool->m_conditional_lock.wait(lock); // 等待条件变量通知，开启线程
             }
-            
+
             // 取出任务队列中的元素
             dequeued = m_pool->m_queue.dequeue(func);
         }

@@ -1,7 +1,6 @@
 #include "allfilemodel.h"
 
-AllFileModel * AllFileModel::Instance = nullptr;
-std::mutex* AllFileModel::thread_lock = new std::mutex();
+AllFileModel * AllFileModel::Instance = new AllFileModel();
 
 AllFileModel::~AllFileModel()
 {
@@ -10,28 +9,12 @@ AllFileModel::~AllFileModel()
         delete Instance;
         Instance = nullptr;
     }
-    if(thread_lock!=nullptr)
-    {
-        delete thread_lock;
-        thread_lock = nullptr;
-    }
 }
 
 AllFileModel *AllFileModel::getInstance()
 {
-    if(Instance != nullptr)
-    {
-        return Instance;
-    }
-    else
-    {
-        thread_lock->lock();
-        Instance = new AllFileModel();
-        FileInfo info;
-        Instance->append(info);
-        thread_lock->unlock();
-    }
     return Instance;
+
 }
 AllFileModel::AllFileModel(QObject *parent)
 {

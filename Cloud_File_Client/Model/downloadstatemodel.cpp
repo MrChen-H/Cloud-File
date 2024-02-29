@@ -1,7 +1,6 @@
 #include "downloadstatemodel.h"
 
-DownLoadStateModel* DownLoadStateModel::Instance = nullptr;
-std::mutex* DownLoadStateModel::threadLock = new std::mutex();
+DownLoadStateModel* DownLoadStateModel::Instance = new DownLoadStateModel();
 
 DownLoadStateModel::~DownLoadStateModel()
 {
@@ -10,36 +9,13 @@ DownLoadStateModel::~DownLoadStateModel()
         delete Instance;
         Instance = nullptr;
     }
-    if(threadLock!=nullptr)
-    {
-        delete threadLock;
-        threadLock = nullptr;
-    }
 }
 
 DownLoadStateModel *DownLoadStateModel::getInstance()
 {
-    if(Instance != nullptr)
-    {
-        return Instance;
-    }
-    else
-    {
-        threadLock->lock();
-        Instance = new DownLoadStateModel();
-        DownLoadInfo info;
-        info.countSize = 1000;
-        info.downLoadSize = 1000;
-        info.downLoadSpeed = 100;
-        info.fileName = "test.txt";
-        info.infoIndex = 0;
-        info.fileType = "txt";
-        Instance->append(info);
-        threadLock->unlock();
-    }
     return Instance;
-
 }
+
 int DownLoadStateModel::rowCount(const QModelIndex &parent) const
 {
     return this->downLoadInfo.size();

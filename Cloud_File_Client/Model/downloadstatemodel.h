@@ -45,7 +45,6 @@ private:
 private:
     DownLoadStateModel(QObject *parent = nullptr);
     static DownLoadStateModel* Instance;
-    static std::mutex *threadLock;
     QList<DownLoadInfo> downLoadInfo;
 
 signals:
