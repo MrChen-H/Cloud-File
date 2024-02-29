@@ -1,5 +1,4 @@
-//thread_pool.h
-
+ï»¿
 #ifndef THREAD_POOL_H
 #define THREAD_POOL_H
 
@@ -16,8 +15,8 @@ template <class T>
 class SafeQueue
 {
 private:
-    std::queue<T> m_queue; //ÀûÓÃÄ£°åº¯Êı¹¹Ôì¶ÓÁĞ
-    std::mutex m_mutex; // ·ÃÎÊ»¥³âĞÅºÅÁ¿
+    std::queue<T> m_queue; //åˆ©ç”¨æ¨¡æ¿å‡½æ•°æ„é€ é˜Ÿåˆ—
+    std::mutex m_mutex; // è®¿é—®äº’æ–¥ä¿¡å·é‡
 
 public:
     SafeQueue() {}
@@ -28,37 +27,37 @@ public:
     
     int size();
     
-    // ¶ÓÁĞÌí¼ÓÔªËØ
+    // é˜Ÿåˆ—æ·»åŠ å…ƒç´ 
     void enqueue(T &t);
     
-    // ¶ÓÁĞÈ¡³öÔªËØ
+    // é˜Ÿåˆ—å–å‡ºå…ƒç´ 
     bool dequeue(T &t);
 };
 
 class ThreadPool
 {
 private:
-    class ThreadWorker // ÄÚÖÃÏß³Ì¹¤×÷Àà
+    class ThreadWorker // å†…ç½®çº¿ç¨‹å·¥ä½œç±»
     {
     private:
-        int m_id; // ¹¤×÷id
-        ThreadPool *m_pool; // ËùÊôÏß³Ì³Ø
+        int m_id; // å·¥ä½œid
+        ThreadPool *m_pool; // æ‰€å±çº¿ç¨‹æ± 
     public:
-        // ¹¹Ôìº¯Êı
+        // æ„é€ å‡½æ•°
         ThreadWorker(ThreadPool *pool, const int id);
         
-        // ÖØÔØ()²Ù×÷
+        // é‡è½½()æ“ä½œ
         void operator()();
     };
     
-    bool m_shutdown; // Ïß³Ì³ØÊÇ·ñ¹Ø±Õ
+    bool m_shutdown; // çº¿ç¨‹æ± æ˜¯å¦å…³é—­
 
-    SafeQueue<std::function<void()>> m_queue; // Ö´ĞĞº¯Êı°²È«¶ÓÁĞ£¬¼´ÈÎÎñ¶ÓÁĞ
-    std::vector<std::thread> m_threads; // ¹¤×÷Ïß³Ì¶ÓÁĞ
-    std::mutex m_conditional_mutex; // Ïß³ÌĞİÃßËø»¥³â±äÁ¿
-    std::condition_variable m_conditional_lock; // Ïß³Ì»·¾³Ëø£¬¿ÉÒÔÈÃÏß³Ì´¦ÓÚĞİÃß»òÕß»½ĞÑ×´Ì¬
+    SafeQueue<std::function<void()>> m_queue; // æ‰§è¡Œå‡½æ•°å®‰å…¨é˜Ÿåˆ—ï¼Œå³ä»»åŠ¡é˜Ÿåˆ—
+    std::vector<std::thread> m_threads; // å·¥ä½œçº¿ç¨‹é˜Ÿåˆ—
+    std::mutex m_conditional_mutex; // çº¿ç¨‹ä¼‘çœ é”äº’æ–¥å˜é‡
+    std::condition_variable m_conditional_lock; // çº¿ç¨‹ç¯å¢ƒé”ï¼Œå¯ä»¥è®©çº¿ç¨‹å¤„äºä¼‘çœ æˆ–è€…å”¤é†’çŠ¶æ€
 public:
-    // Ïß³Ì³Ø¹¹Ôìº¯Êı
+    // çº¿ç¨‹æ± æ„é€ å‡½æ•°
     ThreadPool(const int n_threads = 4);
     ThreadPool(const ThreadPool &) = delete;
     ThreadPool(ThreadPool &&) = delete;
@@ -76,7 +75,7 @@ public:
     auto submit(F &&f, Args &&...args) -> std::future<decltype(f(args...))>
     {
         // Create a function with bounded parameter ready to execute
-        std::function<decltype(f(args...))()> func = std::bind(std::forward<F>(f), std::forward<Args>(args)...);// Á¬½Óº¯ÊıºÍ²ÎÊı¶¨Òå£¬ÌØÊâº¯ÊıÀàĞÍ£¬±ÜÃâ×óÓÒÖµ´íÎó
+        std::function<decltype(f(args...))()> func = std::bind(std::forward<F>(f), std::forward<Args>(args)...);// è¿æ¥å‡½æ•°å’Œå‚æ•°å®šä¹‰ï¼Œç‰¹æ®Šå‡½æ•°ç±»å‹ï¼Œé¿å…å·¦å³å€¼é”™è¯¯
 
         // Encapsulate it into a shared pointer in order to be able to copy construct
         auto task_ptr = std::make_shared<std::packaged_task<decltype(f(args...))()>>(func);
@@ -87,13 +86,13 @@ public:
             (*task_ptr)();
         };
 
-        // ¶ÓÁĞÍ¨ÓÃ°²È«·â°üº¯Êı£¬²¢Ñ¹Èë°²È«¶ÓÁĞ
+        // é˜Ÿåˆ—é€šç”¨å®‰å…¨å°åŒ…å‡½æ•°ï¼Œå¹¶å‹å…¥å®‰å…¨é˜Ÿåˆ—
         m_queue.enqueue(warpper_func);
 
-        // »½ĞÑÒ»¸öµÈ´ıÖĞµÄÏß³Ì
+        // å”¤é†’ä¸€ä¸ªç­‰å¾…ä¸­çš„çº¿ç¨‹
         m_conditional_lock.notify_one();
 
-        // ·µ»ØÏÈÇ°×¢²áµÄÈÎÎñÖ¸Õë
+        // è¿”å›å…ˆå‰æ³¨å†Œçš„ä»»åŠ¡æŒ‡é’ˆ
         return task_ptr->get_future();
     }
 };

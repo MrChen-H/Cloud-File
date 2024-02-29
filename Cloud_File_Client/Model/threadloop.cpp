@@ -1,15 +1,15 @@
-#include "threadloop.h"
+ï»¿#include "threadloop.h"
 template<class T>
-bool SafeQueue<T>::empty() // ·µ»Ø¶ÓÁĞÊÇ·ñÎª¿Õ
+bool SafeQueue<T>::empty() // è¿”å›é˜Ÿåˆ—æ˜¯å¦ä¸ºç©º
 {
-    std::unique_lock<std::mutex> lock(m_mutex); // »¥³âĞÅºÅ±äÁ¿¼ÓËø£¬·ÀÖ¹m_queue±»¸Ä±ä
+    std::unique_lock<std::mutex> lock(m_mutex); // äº’æ–¥ä¿¡å·å˜é‡åŠ é”ï¼Œé˜²æ­¢m_queueè¢«æ”¹å˜
     return m_queue.empty();
 }
 
 template<class T>
 int SafeQueue<T>::size()
 {
-    std::unique_lock<std::mutex> lock(m_mutex); // »¥³âĞÅºÅ±äÁ¿¼ÓËø£¬·ÀÖ¹m_queue±»¸Ä±ä
+    std::unique_lock<std::mutex> lock(m_mutex); // äº’æ–¥ä¿¡å·å˜é‡åŠ é”ï¼Œé˜²æ­¢m_queueè¢«æ”¹å˜
     return m_queue.size();
 }
 
@@ -23,15 +23,15 @@ void SafeQueue<T>::enqueue(T &t)
 template<class T>
 bool SafeQueue<T>::dequeue(T &t)
 {
-    std::unique_lock<std::mutex> lock(m_mutex); // ¶ÓÁĞ¼ÓËø
+    std::unique_lock<std::mutex> lock(m_mutex); // é˜Ÿåˆ—åŠ é”
 
     if (m_queue.empty())
     {
         return false;
     }
 
-    t = std::move(m_queue.front()); // È¡³ö¶ÓÊ×ÔªËØ£¬·µ»Ø¶ÓÊ×ÔªËØÖµ£¬²¢½øĞĞÓÒÖµÒıÓÃ
-    m_queue.pop(); // µ¯³öÈë¶ÓµÄµÚÒ»¸öÔªËØ
+    t = std::move(m_queue.front()); // å–å‡ºé˜Ÿé¦–å…ƒç´ ï¼Œè¿”å›é˜Ÿé¦–å…ƒç´ å€¼ï¼Œå¹¶è¿›è¡Œå³å€¼å¼•ç”¨
+    m_queue.pop(); // å¼¹å‡ºå…¥é˜Ÿçš„ç¬¬ä¸€ä¸ªå…ƒç´ 
 
     return true;
 }
@@ -42,23 +42,23 @@ ThreadPool::ThreadWorker::ThreadWorker(ThreadPool *pool, const int id) : m_pool(
 
 void ThreadPool::ThreadWorker::operator()()
 {
-    std::function<void()> func; // ¶¨Òå»ù´¡º¯ÊıÀàfunc
-    bool dequeued; // ÊÇ·ñÕıÔÚÈ¡³ö¶ÓÁĞÖĞÔªËØ
+    std::function<void()> func; // å®šä¹‰åŸºç¡€å‡½æ•°ç±»func
+    bool dequeued; // æ˜¯å¦æ­£åœ¨å–å‡ºé˜Ÿåˆ—ä¸­å…ƒç´ 
     while (!m_pool->m_shutdown)
     {
         {
-            // ÎªÏß³Ì»·¾³¼ÓËø£¬»¥·ÃÎÊ¹¤×÷Ïß³ÌµÄĞİÃßºÍ»½ĞÑ
+            // ä¸ºçº¿ç¨‹ç¯å¢ƒåŠ é”ï¼Œäº’è®¿é—®å·¥ä½œçº¿ç¨‹çš„ä¼‘çœ å’Œå”¤é†’
             std::unique_lock<std::mutex> lock(m_pool->m_conditional_mutex);
-            // Èç¹ûÈÎÎñ¶ÓÁĞÎª¿Õ£¬×èÈûµ±Ç°Ïß³Ì
+            // å¦‚æœä»»åŠ¡é˜Ÿåˆ—ä¸ºç©ºï¼Œé˜»å¡å½“å‰çº¿ç¨‹
             if (m_pool->m_queue.empty())
             {
-                m_pool->m_conditional_lock.wait(lock); // µÈ´ıÌõ¼ş±äÁ¿Í¨Öª£¬¿ªÆôÏß³Ì
+                m_pool->m_conditional_lock.wait(lock); // ç­‰å¾…æ¡ä»¶å˜é‡é€šçŸ¥ï¼Œå¼€å¯çº¿ç¨‹
             }
 
-            // È¡³öÈÎÎñ¶ÓÁĞÖĞµÄÔªËØ
+            // å–å‡ºä»»åŠ¡é˜Ÿåˆ—ä¸­çš„å…ƒç´ 
             dequeued = m_pool->m_queue.dequeue(func);
         }
-        // Èç¹û³É¹¦È¡³ö£¬Ö´ĞĞ¹¤×÷º¯Êı
+        // å¦‚æœæˆåŠŸå–å‡ºï¼Œæ‰§è¡Œå·¥ä½œå‡½æ•°
         if (dequeued)
         {
             func();
@@ -76,19 +76,19 @@ void ThreadPool::init()
 {
     for (int i = 0; i < m_threads.size(); ++i)
     {
-        m_threads.at(i) = std::thread(ThreadWorker(this, i)); // ·ÖÅä¹¤×÷Ïß³Ì
+        m_threads.at(i) = std::thread(ThreadWorker(this, i)); // åˆ†é…å·¥ä½œçº¿ç¨‹
     }
 }
 
 void ThreadPool::shutdown()
 {
     m_shutdown = true;
-    m_conditional_lock.notify_all(); // Í¨Öª£¬»½ĞÑËùÓĞ¹¤×÷Ïß³Ì
+    m_conditional_lock.notify_all(); // é€šçŸ¥ï¼Œå”¤é†’æ‰€æœ‰å·¥ä½œçº¿ç¨‹
     for (int i = 0; i < m_threads.size(); ++i)
     {
-        if (m_threads.at(i).joinable()) // ÅĞ¶ÏÏß³ÌÊÇ·ñÔÚµÈ´ı
+        if (m_threads.at(i).joinable()) // åˆ¤æ–­çº¿ç¨‹æ˜¯å¦åœ¨ç­‰å¾…
         {
-            m_threads.at(i).join(); // ½«Ïß³Ì¼ÓÈëµ½µÈ´ı¶ÓÁĞ
+            m_threads.at(i).join(); // å°†çº¿ç¨‹åŠ å…¥åˆ°ç­‰å¾…é˜Ÿåˆ—
         }
     }
 }
