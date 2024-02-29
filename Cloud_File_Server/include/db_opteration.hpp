@@ -40,7 +40,7 @@ Db_Operation::Db_Operation() {
         // printf("mysql init error\n");
         return;
     }
-    /// connect to Cloud_File_Server_DB
+    /// connect to Cloud_File_Server_DB Here need Config file
     if (mysql_real_connect(mysql, "127.0.0.1", "root", "chh20020729", "Cloud_File_Server_DB", 0, NULL, 0) == NULL) 
     {
         /// Need log in here
