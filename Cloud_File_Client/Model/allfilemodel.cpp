@@ -1,7 +1,6 @@
 #include "allfilemodel.h"
 
 AllFileModel * AllFileModel::Instance = new AllFileModel();
-std::mutex* AllFileModel::thread_lock = new std::mutex();
 
 AllFileModel::~AllFileModel()
 {
@@ -10,33 +9,12 @@ AllFileModel::~AllFileModel()
         delete Instance;
         Instance = nullptr;
     }
-    if(thread_lock!=nullptr)
-    {
-        delete thread_lock;
-        thread_lock = nullptr;
-    }
 }
 
 AllFileModel *AllFileModel::getInstance()
 {
-    if(Instance != nullptr)
-    {
-        return Instance;
-    }
-    else
-    {
-        thread_lock->lock();
-        Instance = new AllFileModel();
-        FileInfo info;
-        info.fileName = "test.mp3";
-        info.fileSize = 1200;
-        info.fileType = "vedio";
-        info.fileUrl="";
-        info.index=0;
-        Instance->append(info);
-        thread_lock->unlock();
-    }
     return Instance;
+
 }
 AllFileModel::AllFileModel(QObject *parent)
 {
