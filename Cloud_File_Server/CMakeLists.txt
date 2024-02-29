@@ -16,7 +16,7 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
-add_executable(TestServer "${CMAKE_CURRENT_SOURCE_DIR}/src/testServer.cpp")
+add_executable(TestServer "${CMAKE_CURRENT_SOURCE_DIR}/src/GetPath.cpp")
 # add_executable(Delete_File "${CMAKE_CURRENT_SOURCE_DIR}/src/delete_file.cpp")
 # add_executable(DownLoad_File "${CMAKE_CURRENT_SOURCE_DIR}/src/DownLoad_File.cpp")
 # add_executable(Login_Check "${CMAKE_CURRENT_SOURCE_DIR}/src/Login_Cheak.cpp")

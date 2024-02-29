@@ -1,2 +1,5 @@
 */bin/*
 */build/*
+*.json
+*.log
+*.log.*
