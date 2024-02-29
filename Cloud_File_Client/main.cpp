@@ -5,13 +5,13 @@
 #include <Model/downloadstatemodel.h>
 #include <Model/allfilemodel.h>
 #include "QQmlContext"
-
+#include "Net_Work/networkoperate.h"
 int main(int argc, char *argv[])
 {
 
     QGuiApplication app(argc, argv);
 
-    const QString fontPath = "./Segoe_Fluent_Icons.ttf"; // 资源路径
+    NetWorkOperation NetWork;
 
     QQmlApplicationEngine engine;
     qmlRegisterSingletonType<DownLoadStateModel>("DownLoadStateModel", 1, 0, "DownLoadStateModel", [](QQmlEngine *engine, QJSEngine *) -> QObject* {
@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
         Q_UNUSED(engine)
         return AllFileModel::getInstance();
     });
+
+    engine.rootContext()->setContextProperty("NetWork",&NetWork);
 
     const QUrl url(u"qrc:/Cloud_File_Client/Main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

@@ -55,6 +55,7 @@ target_link_libraries(appCloud_File_Client
 )
 
 include(GNUInstallDirs)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 install(TARGETS appCloud_File_Client
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

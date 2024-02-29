@@ -13,6 +13,10 @@ FluContentPage {
         placeholderText: "搜索文件"
     }
 
+    Component.onCompleted:
+    {
+        NetWork.get("eee")
+    }
 
     ListModel {
         id: myModel
