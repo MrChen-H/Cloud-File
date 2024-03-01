@@ -1,4 +1,4 @@
-#include "GetAllFileInfo.h"
+#include "UpLoadFile.h"
 
 int main()
 {
@@ -22,7 +22,7 @@ int main()
         auto lenght = atoi(pLenstr);
         std::string information;
 
-        std::string res_info = GetPathInfo(lenght,input,information);
+        std::string res_info = testFunc(lenght,input,information);
         char reply[1024];
         if(res_info.empty())
         {
