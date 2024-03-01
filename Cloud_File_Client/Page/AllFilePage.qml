@@ -136,7 +136,6 @@ FluContentPage {
     }
     GridView
     {
-
         id:grid_view
         cellWidth: 80
         cellHeight: 80
@@ -170,7 +169,7 @@ FluContentPage {
                 anchors.horizontalCenter: parent.horizontalCenter
                 Component.onCompleted:
                 {
-                    if(fileType === "vedio")
+                    if(fileType === "video")
                     {
                         iconSource = FluentIcons.Video
                     }
@@ -182,9 +181,9 @@ FluContentPage {
                     {
                         iconSource = FluentIcons.MusicNote
                     }
-                    else if(fileType === "other")
+                    else
                     {
-                        iconSource = FluentIcons.FileExplorer
+                        iconSource = FluentIcons.Document
                     }
                 }
                 Rectangle
@@ -217,18 +216,18 @@ FluContentPage {
                 onPressed:function(mouse)
                 {
                     /// 在Item上右键打开菜单
-                    if(mouse.button === Qt.RightButton)
-                    {
-                        menu.popup()
-                    }
-                    else if((mouse.button === Qt.LeftButton) && (mouse.modifiers & Qt.ControlModifier))
+                    if((mouse.button === Qt.LeftButton) && (mouse.modifiers & Qt.ControlModifier))
                     {
                         /// 如果是 Ctrl+右键 点击则多选Item
                         select_statue.visible = !select_statue.visible
                         selectItems.push(modelItem)
                     }
-                    else if(mouse.button === Qt.LeftButton)
+                    else if(mouse.button === Qt.LeftButton || mouse.button === Qt.RightButton)
                     {
+                        if(mouse.button === Qt.RightButton)
+                        {
+                            menu.popup()
+                        }
                         /// 左键点击且item已选中
                         if(select_statue.visible)
                         {

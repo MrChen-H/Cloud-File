@@ -2,7 +2,7 @@
 
 import QtQuick
 import FluentUI
-
+import  "../Page"
 FluObject{
     property var navigationView
     property var paneItemMenu
@@ -10,6 +10,7 @@ FluObject{
         id:item_otherFile
         title:"全部"
         url:"qrc:/Cloud_File_Client/Page/AllFilePage.qml"
+        objectName: "allFilePage"
         icon:FluentIcons.FileExplorer
         onTap:{
             if(navigationView.getCurrentUrl()){

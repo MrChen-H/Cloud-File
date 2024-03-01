@@ -20,6 +20,8 @@ public:
      * @param url
      */
     Q_INVOKABLE void get(QUrl url);
+private:
+    void getFileInfo(QNetworkReply* reply);
 signals:
     void signalRequestStart();
     void signalRequestEnd(QString getData,int statuCode,QString errorString);
