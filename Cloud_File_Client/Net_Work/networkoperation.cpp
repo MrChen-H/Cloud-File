@@ -33,6 +33,7 @@ void NetWorkOperation::get(QUrl url)
     request.setHeader(QNetworkRequest::UserAgentHeader,QVariant("application/json;charset=utf-8"));
     m_netWorkManager->get(request);    //get request header
     connect(this->m_netWorkManager,&QNetworkAccessManager::finished,this,&NetWorkOperation::getFileInfo);
+
 }
 
 void NetWorkOperation::getFileInfo(QNetworkReply *reply)
@@ -42,7 +43,13 @@ void NetWorkOperation::getFileInfo(QNetworkReply *reply)
     {
         QString  getInfo = reply->readAll();
         emit signalRequestEnd(getInfo,reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(),reply->errorString());
-        json fileInfoJson = json::parse(getInfo.toStdString());
+        json fileInfoJson;
+        try {
+            fileInfoJson = json::parse(getInfo.toStdString());
+        } catch (const nlohmann::json::exception& e) {
+            // 未能成功解析，可能是格式错误或其他问题
+            return;
+        }
         for (auto& entry : fileInfoJson.items())
         {
             // 遍历 JSON 对象中的每个键值对

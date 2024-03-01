@@ -25,15 +25,30 @@ FluContentPage {
         netWork.get("http://111.229.83.106/GetFileInfo")
     }
 
+    Timer
+    {
+        id: myTimer
+        interval: 1000 // 每隔1000毫秒触发一次
+        repeat: true // 设置为true表示重复计时，false则只触发一次
+        running: false // 初始状态下定时器不运行
+
+        // 当定时器触发时执行的处理程序
+        onTriggered: {
+            statusPage.statusMode = FluStatusLayoutType.Loading
+            myTimer.stop()
+        }
+    }
+
     Connections
     {
         target: netWork
         function onSignalRequestStart()
         {
-            statusPage.statusMode = FluStatusLayoutType.Loading
+            myTimer.start()
         }
         function onSignalRequestEnd(getData,errorCode,errorString)
         {
+            myTimer.stop()
             if (100 > errorCode||errorCode < 200 || errorCode >= 300)
             {
                 statusPage.errorText = errorString
@@ -125,10 +140,10 @@ FluContentPage {
             }
         }
         FluMenuItem{
-            text: "新建目录"
+            text: "详细信息"
             id: newFloder
             visible: true
-            iconSource:FluentIcons.FileExplorer
+            iconSource:FluentIcons.Info
             onClicked: {
             }
         }
@@ -156,6 +171,10 @@ FluContentPage {
             color: "transparent"
             statusMode: FluStatusLayoutType.Empty
             visible: false
+            onErrorClicked:
+            {
+                netWork.get("http://111.229.83.106/GetFileInfo");
+            }
         }
         delegate:Item
         {
@@ -167,6 +186,15 @@ FluContentPage {
             {
                 id:item_icon
                 anchors.horizontalCenter: parent.horizontalCenter
+
+                FluTooltip
+                {
+                    id:fileNameTooltip
+                    text:fileName
+                    visible: false
+                    delay: 2000
+                }
+
                 Component.onCompleted:
                 {
                     if(fileType === "video")
@@ -186,6 +214,17 @@ FluContentPage {
                         iconSource = FluentIcons.Document
                     }
                 }
+                MouseArea
+                {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        fileNameTooltip.visible = true
+                    }
+                    onExited: {
+                        fileNameTooltip.visible = false
+                    }
+                }
                 Rectangle
                 {
                     id:select_statue
@@ -194,6 +233,7 @@ FluContentPage {
                     radius: 5
                     opacity: 0.2
                     visible: false
+
                 }
 
             }
@@ -227,6 +267,10 @@ FluContentPage {
                         if(mouse.button === Qt.RightButton)
                         {
                             menu.popup()
+                            if(select_statue.visible)
+                            {
+                                return;
+                            }
                         }
                         /// 左键点击且item已选中
                         if(select_statue.visible)
