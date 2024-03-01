@@ -142,6 +142,16 @@ FluContentPage {
         }
 
     }
+    FluIconButton
+    {
+        // 刷新按钮
+        iconSource:FluentIcons.Refresh
+        anchors.right: parent.right
+        onClicked:
+        {
+            netWork.get("http://111.229.83.106/GetFileInfo");
+        }
+    }
     GridView
     {
         id:grid_view
@@ -169,6 +179,8 @@ FluContentPage {
                 netWork.get("http://111.229.83.106/GetFileInfo");
             }
         }
+
+
         delegate:Item
         {
             id: modelItem
