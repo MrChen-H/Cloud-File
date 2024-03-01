@@ -20,6 +20,7 @@ public:
      * @param url
      */
     Q_INVOKABLE void get(QUrl url);
+    Q_INVOKABLE void upLoadFile(QStringList filePathArray);
 private:
     void getFileInfo(QNetworkReply* reply);
 signals:

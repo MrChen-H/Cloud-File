@@ -2,6 +2,7 @@
 import FluentUI
 import QtQuick.Controls
 import QtQuick.Window
+import QtQuick.Dialogs
 import QtQuick.Layouts
 import AllFileModel
 import NetWorkOperation
@@ -9,10 +10,13 @@ FluContentPage {
     id: allFilePage
     objectName: 'allFilePage'
     property var selectItems: []
+    property var serchItems:[]
     FluAutoSuggestBox{
         id:text_box
         iconSource: FluentIcons.Search
+        items: serchItems
         placeholderText: "搜索文件"
+
     }
     NetWorkOperation
     {
@@ -24,21 +28,14 @@ FluContentPage {
     {
         netWork.get("http://111.229.83.106/GetFileInfo")
     }
-
-    Timer
-    {
-        id: myTimer
-        interval: 1000 // 每隔1000毫秒触发一次
-        repeat: true // 设置为true表示重复计时，false则只触发一次
-        running: false // 初始状态下定时器不运行
-    }
-
     Connections
     {
         target: netWork
         function onSignalRequestStart()
         {
             statusPage.statusMode = FluStatusLayoutType.Loading
+            text_box.items.length = 0
+            selectItems.length = 0
         }
         function onSignalRequestEnd(getData,errorCode,errorString)
         {
@@ -57,6 +54,17 @@ FluContentPage {
                 statusPage.statusMode = FluStatusLayoutType.Error
             }
             console.log("http:",errorCode)
+        }
+    }
+
+    FileDialog
+    {
+        id:selectFileDialog
+        title: "选择文件"
+        nameFilters: ["选择文件 (*.*)"]
+        onAccepted:
+        {
+            console.log(selectFileDialog.selectedFile)
         }
     }
 
@@ -130,6 +138,7 @@ FluContentPage {
             visible: true
             iconSource:FluentIcons.OpenFile
             onClicked: {
+                selectFileDialog.open()
             }
         }
         FluMenuItem{
@@ -149,6 +158,7 @@ FluContentPage {
         anchors.right: parent.right
         onClicked:
         {
+            selectItems.length = 0
             netWork.get("http://111.229.83.106/GetFileInfo");
         }
     }
@@ -187,6 +197,8 @@ FluContentPage {
             width: 68
             height: 80
             property var indexInView: -1
+            z:9999
+
             FluIconButton
             {
                 id:item_icon
@@ -197,7 +209,7 @@ FluContentPage {
                     id:fileNameTooltip
                     text:fileName
                     visible: false
-                    delay: 2000
+                    delay: 1000
                 }
 
                 Component.onCompleted:
@@ -251,6 +263,10 @@ FluContentPage {
                 wrapMode: Text.WrapAnywhere
                 text: fileName
                 horizontalAlignment: Text.AlignHCenter
+                Component.onCompleted:
+                {
+                    serchItems.push({title:fileName})
+                }
             }
             MouseArea
             {
@@ -314,6 +330,7 @@ FluContentPage {
 
                     }
                 }
+
             }
             /// 清空item的选中状态
             function cancelSelect()
@@ -336,7 +353,39 @@ FluContentPage {
             {
                 statusPage.visible = false
             }
+
         }
+        MouseArea
+        {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+            propagateComposedEvents: true
+            onClicked:function(mouse)
+            {
+                console.log("Test")
+            }
+            onPressed:function(mouse)
+            {
+                for(var x = 0; x< selectItems.length;x++)
+                {
+                    selectItems[x].cancelSelect()
+                }
+                selectItems.length = 0
+
+                if(mouse.button === Qt.RightButton)
+                {
+                    menu.popup()
+                }
+
+                mouse.accepted = false
+            }
+            onReleased:function(mouse)
+            {
+                mouse.accepted = false
+            }
+
+        }
+
     }
     function setLoading(isLoading)
     {

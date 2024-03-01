@@ -36,6 +36,11 @@ void NetWorkOperation::get(QUrl url)
 
 }
 
+void NetWorkOperation::upLoadFile(QStringList filePathArray)
+{
+
+}
+
 void NetWorkOperation::getFileInfo(QNetworkReply *reply)
 {
 

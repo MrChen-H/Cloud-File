@@ -38,7 +38,7 @@ FluObject{
     }
     FluPaneItem{
         id:item_DownLoadState
-        title:"下载状态"
+        title:"传输状态"
 
         infoBadge:FluBadge{
             count: item_DownLoadState.count
