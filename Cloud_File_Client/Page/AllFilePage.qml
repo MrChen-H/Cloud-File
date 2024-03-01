@@ -31,12 +31,6 @@ FluContentPage {
         interval: 1000 // 每隔1000毫秒触发一次
         repeat: true // 设置为true表示重复计时，false则只触发一次
         running: false // 初始状态下定时器不运行
-
-        // 当定时器触发时执行的处理程序
-        onTriggered: {
-            statusPage.statusMode = FluStatusLayoutType.Loading
-            myTimer.stop()
-        }
     }
 
     Connections
@@ -44,11 +38,10 @@ FluContentPage {
         target: netWork
         function onSignalRequestStart()
         {
-            myTimer.start()
+            statusPage.statusMode = FluStatusLayoutType.Loading
         }
         function onSignalRequestEnd(getData,errorCode,errorString)
         {
-            myTimer.stop()
             if (100 > errorCode||errorCode < 200 || errorCode >= 300)
             {
                 statusPage.errorText = errorString
