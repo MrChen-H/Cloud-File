@@ -47,7 +47,8 @@ FileInfoArray::FileInfoArray() {
 }
 void FileInfoArray::updateInfo() {
     auto sql_opt = Db_Operation::getInstance();
-
+    file_type_info.clear();
+    
     std::vector<std::string> file_info;
     std::string query = GET_ALL_FILE_INFO_QUERY;
     std::string errorString;

@@ -18,6 +18,7 @@ using json = nlohmann::json;
 std::string GetPathInfo(int Data_size, FCGX_Stream *data_strean,std::string& path_info)
 {
     auto fileInfoarray = FileInfoArray::getInstance();
+    fileInfoarray->updateInfo();
     auto fileInfo = fileInfoarray->getFileInfoArray();
 
     json res_json;
