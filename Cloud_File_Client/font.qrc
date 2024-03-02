@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>Segoe_Fluent_Icons.ttf</file>
+        <file>global/TransportItems.qml</file>
+        <file>Page/TransportPage.qml</file>
+        <file>Page/UpLoadStatusPage.qml</file>
     </qresource>
 </RCC>

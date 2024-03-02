@@ -26,11 +26,13 @@ qt_add_qml_module(appCloud_File_Client
     QML_FILES Page/DownLoadStatePage.qml
     QML_FILES global/MyFileItems.qml
     QML_FILES Page/VideoPage.qml
-    QML_FILES
+    QML_FILES global/TransportItems.qml
     QML_FILES Page/AllFilePage.qml
     QML_FILES Page/PictureFilePage.qml
     QML_FILES Page/MusicFilePage.qml
     QML_FILES Page/HomePage.qml
+    QML_FILES Page/TransportPage.qml
+    QML_FILES
     SOURCES Model/downloadstatemodel.h Model/downloadstatemodel.cpp
     RESOURCES font.qrc
     SOURCES Net_Work/threadloop.h Net_Work/threadloop.cpp
@@ -38,6 +40,8 @@ qt_add_qml_module(appCloud_File_Client
     SOURCES Net_Work/networkoperation.h Net_Work/networkoperation.cpp
     SOURCES Work_Thread/downloadthread.h Work_Thread/downloadthread.cpp
     SOURCES global/globalstatus.h global/globalstatus.cpp
+    SOURCES
+    SOURCES Model/uploadfileinfomode.h Model/uploadfileinfomode.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

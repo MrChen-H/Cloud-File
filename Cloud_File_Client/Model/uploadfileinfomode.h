@@ -1,11 +1,10 @@
-#ifndef DOWNLOADSTATEMODEL_H
-#define DOWNLOADSTATEMODEL_H
+#ifndef UPLOADFILEINFOMODE_H
+#define UPLOADFILEINFOMODE_H
 
+#include <QAbstractListModel>
 #include <QObject>
-#include "QAbstractListModel"
-#include "mutex"
 
-struct DownLoadInfo
+struct UpLoadInfo
 {
     QString fileName;
     int downLoadSize;
@@ -14,22 +13,21 @@ struct DownLoadInfo
     QString fileType;
     int infoIndex;
 };
-class DownLoadStateModel : public QAbstractListModel
+class UpLoadfileInfoMode : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    ~DownLoadStateModel();
-    Q_INVOKABLE static DownLoadStateModel *getInstance();
-    DownLoadStateModel(DownLoadStateModel const&) = delete;
+    ~UpLoadfileInfoMode();
+    static UpLoadfileInfoMode *getInstance();
+    UpLoadfileInfoMode(UpLoadfileInfoMode const&) = delete;
 
     virtual int rowCount(const QModelIndex &parent) const override;
     virtual QHash<int,QByteArray> roleNames() const override;
     virtual QVariant data(const QModelIndex &index, int role) const override;
 
-    void updateInfo(int index,DownLoadInfo& info);
-    QList<DownLoadInfo> getInfoList(){return downLoadInfo;}
+    QList<UpLoadInfo> getInfoList(){return upLoadInfoList;}
 public:
-    Q_INVOKABLE void append(const DownLoadInfo &info);
+    Q_INVOKABLE void append(const UpLoadInfo &info);
     Q_INVOKABLE void remove(int index);
     Q_INVOKABLE void removeAll();
 
@@ -44,11 +42,11 @@ private:
     };
 
 private:
-    DownLoadStateModel(QObject *parent = nullptr);
-    static DownLoadStateModel* Instance;
-    QList<DownLoadInfo> downLoadInfo;
+    UpLoadfileInfoMode(QObject *parent = nullptr);
+    static UpLoadfileInfoMode* Instance;
+    QList<UpLoadInfo> upLoadInfoList;
 
 signals:
 };
 
-#endif // DOWNLOADSTATEMODEL_H
+#endif // UPLOADFILEINFOMODE_H

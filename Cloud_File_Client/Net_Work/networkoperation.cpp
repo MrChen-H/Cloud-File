@@ -1,11 +1,14 @@
 ﻿#include "networkoperation.h"
 
 #include <QEventLoop>
+#include <QFile>
+#include <QFileInfo>
+#include <QHttpPart>
 #include <QNetworkReply>
 #include "QDebug"
-#include "iostream"
 #include "QJsonDocument"
 #include "./Model/allfilemodel.h"
+#include "./Model/downloadstatemodel.h"
 
 NetWorkOperation::NetWorkOperation()
 {
@@ -36,9 +39,49 @@ void NetWorkOperation::get(QUrl url)
 
 }
 
-void NetWorkOperation::upLoadFile(QStringList filePathArray)
+void NetWorkOperation::upLoadFile(QString filePathArray)
 {
 
+    filePathArray.remove(0,8);
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    QHttpPart file_Part;
+    QFile *file = new QFile(filePathArray);
+    QFileInfo file_info(*file);
+    file->open(QIODevice::ReadOnly);
+
+    QNetworkAccessManager *Upload_manager = new QNetworkAccessManager(this);
+
+//    QByteArray bytes = file->readAll();//读取文件内容
+    QString arg = QString("form-data;filename=\"%1\";file_size=\"%2\";")\
+                      .arg(file_info.fileName().toUtf8())\
+                      .arg(file_info.size());
+    file_Part.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant(arg));
+    file_Part.setBodyDevice(file);//设置传输数据
+    file->setParent(multiPart);//文件指针在multiPart析构时关闭文件同时析构
+    multiPart->append(file_Part);
+
+    QNetworkRequest request;
+    request.setUrl(QUrl("http://111.229.83.106/UploadFile"));//设置请求URL
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
+    DownLoadInfo info;
+    info.fileName = file_info.fileName().toUtf8();
+    info.downLoadSize = 0;
+    info.fileType = "text";
+    info.downLoadSpeed = 0;
+    info.countSize = file_info.size();
+
+    DownLoadStateModel::getInstance()->append(info);
+
+    QNetworkReply *reply = Upload_manager->post(request, multiPart);
+    multiPart->setParent(reply);
+    connect(reply, &QNetworkReply::uploadProgress, [=](qint64 bytesRead, qint64 totalBytes){
+        auto& info = DownLoadStateModel::getInstance()->getInfoList().first();
+
+    });
+    connect(reply,&QNetworkReply::finished,[=]{//当服务器确定文件收到并在服务器创建资源时完成进度条并弹出提示框
+        auto get_server_message = reply->readAll();
+
+    });
 }
 
 void NetWorkOperation::getFileInfo(QNetworkReply *reply)

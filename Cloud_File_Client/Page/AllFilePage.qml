@@ -64,7 +64,7 @@ FluContentPage {
         nameFilters: ["选择文件 (*.*)"]
         onAccepted:
         {
-            console.log(selectFileDialog.selectedFile)
+            netWork.upLoadFile(selectedFile)
         }
     }
 

@@ -71,7 +71,7 @@ void DownLoadStateModel::updateInfo(int index, DownLoadInfo &Newinfo)
     }
 }
 
-void DownLoadStateModel::append(DownLoadInfo& info)
+void DownLoadStateModel::append(const DownLoadInfo& info)
 {
     emit beginInsertRows(QModelIndex(),downLoadInfo.size(),downLoadInfo.size());
     downLoadInfo.append(info);

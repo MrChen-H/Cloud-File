@@ -1,4 +1,5 @@
 
 singleton ItemsFooter 1.0 ItemsFooter.qml
-singleton ItemsOriginal.0 ItemsOriginal.qml
-singleton MyFileItems.0 MyFileItems.qml
+singleton ItemsOriginal 1.0 ItemsOriginal.qml
+singleton MyFileItemsl 1.0 MyFileItems.qml
+singleton TransportItems 1.0 TransportItems.qml

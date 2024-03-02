@@ -44,7 +44,7 @@ FluObject{
             count: item_DownLoadState.count
         }
         icon:FluentIcons.BulletedListMirrored
-        url:"qrc:/Cloud_File_Client/Page/DownLoadStatePage.qml"
+        url:"qrc:/Cloud_File_Client/Page/TransportPage.qml"
         onTap:{
             if(navigationView.getCurrentUrl()){
                 item_DownLoadState.count = 0

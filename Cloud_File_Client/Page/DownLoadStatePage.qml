@@ -72,6 +72,7 @@ FluContentPage {
         height:parent.height-80
         id:downLoadInfoList
         focus: true
+        spacing:10
         anchors
         {
             bottom:parent.bottom
