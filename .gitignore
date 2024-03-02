@@ -2,4 +2,4 @@
 */build/*
 *.json
 *.log
-*.log.*
+*/userFile/*

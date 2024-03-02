@@ -20,22 +20,23 @@ int main()
             break;
         }
         auto lenght = atoi(pLenstr);
-        std::string information;
-
-        std::string res_info = testFunc(lenght,input,information);
+        
+        bool statue = testFunc(lenght,input);
         char reply[1024];
-        if(res_info.empty())
+        if(statue == false)
         {
             FCGX_FPrintF(output, "Content-type: application/json\r\n"
-                             "Charset: utf-8\r\n"
-                             "\r\n"
-                             "{\"file_name\":\"null\"}");   
+                            "Charset: utf-8\r\n"
+                            "\r\n"
+                            "{\"upload_status\":\"Failed\"}");  
         }
-        // 数据回写
-        FCGX_FPrintF(output, "Content-type: application/json\r\n"
-                             "Charset: utf-8\r\n"
-                             "\r\n"
-                             "%s",res_info.c_str());   
+        else
+        {
+            FCGX_FPrintF(output, "Content-type: application/json\r\n"
+                            "Charset: utf-8\r\n"
+                            "\r\n"
+                            "{\"upload_status\":\"Success\"}");       
+        }
     }
     return 0;
 }
