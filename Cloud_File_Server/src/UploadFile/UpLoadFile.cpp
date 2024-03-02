@@ -20,8 +20,8 @@ int main()
             break;
         }
         auto lenght = atoi(pLenstr);
-        
-        bool statue = testFunc(lenght,input);
+        ERROR_TYPE getError;
+        bool statue = testFunc(lenght,input,getError);
         char reply[1024];
         if(statue == false)
         {

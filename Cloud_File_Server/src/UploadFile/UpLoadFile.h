@@ -16,8 +16,15 @@
 #include "fcgio.h"
 #include "fcgiapp.h"
 #include "db_opteration.hpp"
+enum ERROR_TYPE
+{
+    ERROR_TYPE_FILE_CONTENT_ERROR = 0,
+    ERROR_TYPE_FILE_ALREDY_EXIST = 1,
+    ERROR_TYPE_NOT_CREATE_FILE_FAILED = 2,
+    ERROR_REQUEST_FROMAT_ERROR = 3
+};
 
-bool testFunc(int data_len, FCGX_Stream *data_stream)
+bool testFunc(int data_len, FCGX_Stream *data_stream,ERROR_TYPE& errorType)
 {
 
     if (spdlog::get("Upload_logger") == nullptr) // 如果不存在名为 Delete_File 的日志管理器则创建
@@ -51,6 +58,11 @@ bool testFunc(int data_len, FCGX_Stream *data_stream)
         }
     }
     std::string Boundary; // 边界字符
+    if(data_arr.empty())
+    {
+        errorType = ERROR_TYPE::ERROR_REQUEST_FROMAT_ERROR;
+        return false;
+    }
     for(auto it : data_arr[0])
     {
         if(it == '\r')
@@ -68,12 +80,22 @@ bool testFunc(int data_len, FCGX_Stream *data_stream)
         }
         fileName += data_arr[1][i];
     }
+    
     // 创建目录
     std::filesystem::path dirPath("../userFile");
     if (!std::filesystem::exists(dirPath)) 
     {
         std::filesystem::create_directories(dirPath);
     }
+    else
+    {
+        if(std::filesystem::exists(dirPath/fileName))
+        {
+            errorType = ERROR_TYPE::ERROR_TYPE_FILE_ALREDY_EXIST;
+            return false;
+        }
+    }
+    
 
     // 然后尝试打开文件
     std::ofstream file(dirPath/fileName,std::ios::out | std::ios::binary);
@@ -81,6 +103,7 @@ bool testFunc(int data_len, FCGX_Stream *data_stream)
     {
         logger->info("Open file {} filed!",std::string(dirPath/fileName));
         file.close();
+        errorType = ERROR_TYPE::ERROR_TYPE_NOT_CREATE_FILE_FAILED;
         return false;
     }
     
@@ -95,7 +118,6 @@ bool testFunc(int data_len, FCGX_Stream *data_stream)
             file << it;
             
         }
-        
         
     }
     file.close();
