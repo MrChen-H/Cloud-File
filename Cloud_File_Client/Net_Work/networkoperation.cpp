@@ -9,6 +9,7 @@
 #include "QJsonDocument"
 #include "./Model/allfilemodel.h"
 #include "./Model/downloadstatemodel.h"
+#include "./Model/uploadfileinfomode.h"
 
 NetWorkOperation::NetWorkOperation()
 {
@@ -63,19 +64,16 @@ void NetWorkOperation::upLoadFile(QString filePathArray)
     QNetworkRequest request;
     request.setUrl(QUrl("http://111.229.83.106/UploadFile"));//设置请求URL
     request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
-    DownLoadInfo info;
+    UpLoadInfo info;
     info.fileName = file_info.fileName().toUtf8();
-    info.downLoadSize = 0;
-    info.fileType = "text";
-    info.downLoadSpeed = 0;
+    info.upLoadSize = 0;
+    info.upLoadSpeed = 0;
     info.countSize = file_info.size();
-
-    DownLoadStateModel::getInstance()->append(info);
 
     QNetworkReply *reply = Upload_manager->post(request, multiPart);
     multiPart->setParent(reply);
     connect(reply, &QNetworkReply::uploadProgress, [=](qint64 bytesRead, qint64 totalBytes){
-        auto& info = DownLoadStateModel::getInstance()->getInfoList().first();
+
 
     });
     connect(reply,&QNetworkReply::finished,[=]{//当服务器确定文件收到并在服务器创建资源时完成进度条并弹出提示框

@@ -21,7 +21,7 @@ FluObject{
     FluPaneItem{
         id:item_UpLoadList
         title:"上传列表"
-        url:"qrc:/Cloud_File_Client/Page/DownLoadStatePage.qml"
+        url:"qrc:/Cloud_File_Client/Page/UpLoadStatusPage.qml"
         icon:FluentIcons.OpenFile
         onTap:{
             if(navigationView.getCurrentUrl()){

@@ -6,6 +6,7 @@ import QtQuick.Dialogs
 import QtQuick.Layouts
 import AllFileModel
 import NetWorkOperation
+import UpLoadfileInfoMode
 FluContentPage {
     id: allFilePage
     objectName: 'allFilePage'
@@ -64,7 +65,7 @@ FluContentPage {
         nameFilters: ["选择文件 (*.*)"]
         onAccepted:
         {
-            netWork.upLoadFile(selectedFile)
+            UpLoadfileInfoMode.append(selectedFile)
         }
     }
 
