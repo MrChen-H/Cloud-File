@@ -2,4 +2,6 @@
 */build/*
 *.json
 *.log
+*.log.*
+*/.vscode/*
 */userFile/*

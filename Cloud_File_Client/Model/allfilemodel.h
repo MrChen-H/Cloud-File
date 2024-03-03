@@ -7,6 +7,7 @@
 
 struct FileInfo
 {
+    QString id;
     int fileSize;
     QString fileUrl;
     QString fileType;
@@ -25,7 +26,8 @@ private:
         FileUrlRole,
         FileSizeRole,
         InfoIndexRole,
-        FileTypeRole
+        FileTypeRole,
+        FileIdRole
     };
 public:
     ~AllFileModel();

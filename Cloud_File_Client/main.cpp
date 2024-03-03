@@ -1,4 +1,4 @@
-﻿                                           #include <QGuiApplication>
+﻿#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <qfont.h>
 #include <qfontdatabase.h>
@@ -7,6 +7,7 @@
 #include "QQmlContext"
 #include "Net_Work/networkoperation.h"
 #include "./Global/globalstatus.h"
+#include "./Model/uploadfileinfomode.h"
 int main(int argc, char *argv[])
 {
 
@@ -24,6 +25,10 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType<GlobalStatus>("GlobalStatus", 1, 0, "GlobalStatus", [](QQmlEngine *engine, QJSEngine *) -> QObject* {
         Q_UNUSED(engine)
         return GlobalStatus::getInstance();
+    });
+    qmlRegisterSingletonType<UpLoadfileInfoMode>("UpLoadfileInfoMode", 1, 0, "UpLoadfileInfoMode", [](QQmlEngine *engine, QJSEngine *) -> QObject* {
+        Q_UNUSED(engine)
+        return UpLoadfileInfoMode::getInstance();
     });
     qmlRegisterType<NetWorkOperation>("NetWorkOperation", 1, 0, "NetWorkOperation");
 

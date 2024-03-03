@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "QAbstractListModel"
-#include "mutex"
 
 struct DownLoadInfo
 {
@@ -27,8 +26,9 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const override;
 
     void updateInfo(int index,DownLoadInfo& info);
+    QList<DownLoadInfo> getInfoList(){return downLoadInfo;}
 public:
-    Q_INVOKABLE void append(DownLoadInfo& info);
+    Q_INVOKABLE void append(const DownLoadInfo &info);
     Q_INVOKABLE void remove(int index);
     Q_INVOKABLE void removeAll();
 

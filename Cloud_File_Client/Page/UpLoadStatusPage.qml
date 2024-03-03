@@ -1,9 +1,9 @@
-﻿import QtQuick
+import QtQuick
 import FluentUI
 import QtQuick.Controls
 import QtQuick.Window
 import QtQuick.Layouts
-import DownLoadStateModel
+import UpLoadfileInfoMode
 
 FluContentPage {
     signal signalPauseClick(var beClickItem)
@@ -20,7 +20,7 @@ FluContentPage {
         neutralText: "取消"
 
         onPositiveClicked: {
-            DownLoadStateModel.removeAll();
+            UpLoadfileInfoMode.removeAll();
             showInfo("已全部取消");
         }
     }
@@ -30,13 +30,17 @@ FluContentPage {
         spacing:10
         FluIconButton
         {
-            id:downLoadAll
-            iconSource:FluentIcons.Download
+            id:startAll
+            iconSource:FluentIcons.Upload
             FluTooltip
             {
                 text: "全部开始"
-                visible: downLoadAll.hovered
+                visible: startAll.hovered
                 delay: 1000
+            }
+            onClicked:
+            {
+                UpLoadfileInfoMode.startUploadAll()
             }
         }
         FluIconButton
@@ -70,7 +74,7 @@ FluContentPage {
     ListView {
         width: parent.width
         height:parent.height-80
-        id:downLoadInfoList
+        id:upLoadInfoList
         focus: true
         spacing:10
         anchors
@@ -78,13 +82,13 @@ FluContentPage {
             bottom:parent.bottom
         }
 
-        model: DownLoadStateModel
+        model: UpLoadfileInfoMode
         ScrollBar.vertical: FluScrollBar {}
 
         delegate: FluArea
         {
-            id:downLoadProcessItem
-            width: downLoadInfoList.width
+            id:upLoadProcessItem
+            width: upLoadInfoList.width
             height: 60
             FluIcon
             {
@@ -94,22 +98,22 @@ FluContentPage {
                 x:10
                 Component.onCompleted:
                 {
-                    if(fileType === "mp3")
-                    {
-                        iconSource = FluentIcons.MusicNote
-                    }
-                    else if(fileType === "mp4")
-                    {
-                        iconSource = FluentIcons.Video
-                    }
-                    else if(fileType === 'jpg')
-                    {
-                        iconSource = FluentIcons.Picture
-                    }
-                    else if(fileType === 'txt')
-                    {
+//                    if(fileType === "mp3")
+//                    {
+//                        iconSource = FluentIcons.MusicNote
+//                    }
+//                    else if(fileType === "mp4")
+//                    {
+//                        iconSource = FluentIcons.Video
+//                    }
+//                    else if(fileType === 'jpg')
+//                    {
+//                        iconSource = FluentIcons.Picture
+//                    }
+//                    else if(fileType === 'txt')
+//                    {
                         iconSource = FluentIcons.Document
-                    }
+//                    }
                 }
             }
 
@@ -124,37 +128,38 @@ FluContentPage {
                 horizontalAlignment: Text.AlignLeft
 
             }
+
             FluText {
-                id:downLoadSpeedText
+                id:countSizeText
                 font.pixelSize: 11
                 y:item_name.y+20
                 x:fileIcon.x+fileIcon.width+10
                 width:200
                 wrapMode: Text.WrapAnywhere
-                text:countSize
+                text:alreadyUpload
                 horizontalAlignment: Text.AlignLeft
                 opacity: 0.7
             }
             FluProgressBar{
                 width: 250
-                id:downLoadProcess
-                x:bottonGroup.x-width-40
+                id:upLoadProcess
+                x:bottonGroup.x-width-60
                 progressVisible: true
                 anchors
                 {
                     verticalCenter: parent.verticalCenter
                 }
                 indeterminate: false
-
+                value:upLoadProess
             }
             FluText {
                 id:stateText
                 font.pixelSize: 11
-                y:downLoadProcess.y+downLoadProcess.height+5
-                anchors.left: downLoadProcess.left
-                width:50
+                y:upLoadProcess.y+upLoadProcess.height+5
+                anchors.left: upLoadProcess.left
+                width:100
                 wrapMode: Text.WrapAnywhere
-                text:"暂停中"
+                text:upLoadSpeed
                 horizontalAlignment: Text.AlignLeft
                 opacity: 0.8
             }
@@ -174,21 +179,17 @@ FluContentPage {
                         if(iconSource === FluentIcons.Play)
                         {
                             iconSource = FluentIcons.Pause
-                            signalPauseClick(downLoadProcessItem)
-                            downLoadProcess.indeterminate = false
-                            downLoadProcess.value = 0.5
-                            stateText.text  = downLoadSpeed
-
+                            signalPauseClick(upLoadProcessItem)
+                            upLoadProcess.indeterminate = false
                         }
                         else
                         {
                             iconSource = FluentIcons.Play
-                            signalPlayClick(downLoadProcessItem)
-                            downLoadProcess.indeterminate = true
+                            signalPlayClick(upLoadProcessItem)
                             stateText.text ="暂停中"
 
                         }
-
+                        UpLoadfileInfoMode.startUpLoadByIndex(infoIndex)
                     }
                 }
                 FluIconButton
@@ -197,10 +198,13 @@ FluContentPage {
                     iconSize: 10
                     onClicked:
                     {
-                        signaldeleteClick(downLoadProcessItem)
+                        signaldeleteClick(upLoadProcessItem)
                     }
                 }
+
             }
+
         }
+
     }
 }

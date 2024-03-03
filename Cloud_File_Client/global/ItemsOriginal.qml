@@ -2,11 +2,22 @@
 
 import QtQuick
 import FluentUI
+import UpLoadfileInfoMode
 
 FluObject{
 
     property var navigationView
     property var paneItemMenu
+
+    Connections
+    {
+        target:UpLoadfileInfoMode
+        function onSignalJumpToTransportPage()
+        {
+            navigationView.push("qrc:/Cloud_File_Client/Page/TransportPage.qml")
+            navigationView.setCurrentIndex(2)
+        }
+    }
 
     FluPaneItem{
         id:item_home
@@ -38,18 +49,19 @@ FluObject{
     }
     FluPaneItem{
         id:item_DownLoadState
-        title:"下载状态"
+        title:"传输状态"
 
         infoBadge:FluBadge{
             count: item_DownLoadState.count
         }
         icon:FluentIcons.BulletedListMirrored
-        url:"qrc:/Cloud_File_Client/Page/DownLoadStatePage.qml"
+        url:"qrc:/Cloud_File_Client/Page/TransportPage.qml"
         onTap:{
             if(navigationView.getCurrentUrl()){
                 item_DownLoadState.count = 0
             }
             navigationView.push(url)
         }
+
     }
 }

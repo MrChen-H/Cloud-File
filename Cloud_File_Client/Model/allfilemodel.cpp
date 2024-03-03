@@ -34,6 +34,7 @@ QHash<int, QByteArray> AllFileModel::roleNames() const
     roles[InfoIndexRole] = "infoIndex";
     roles[FileTypeRole] = "fileType";
     roles[FileSizeRole] = "FileSize";
+    roles[FileIdRole] = "FileID";
     return roles;
 }
 
@@ -56,6 +57,8 @@ QVariant AllFileModel::data(const QModelIndex &index, int role) const
         return data.fileType;
     case FileSizeRole:
         return data.fileSize;
+    case FileIdRole:
+        return data.id;
     default:
         return QVariant();
     }
