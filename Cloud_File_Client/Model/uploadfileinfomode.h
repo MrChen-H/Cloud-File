@@ -3,6 +3,7 @@
 
 #include <QAbstractListModel>
 #include <QObject>
+#include <QUrl>
 #include "QTimer"
 
 class UpLoadInfo
@@ -40,13 +41,15 @@ public:
 
     QList<UpLoadInfo> getInfoList(){return upLoadInfoList;}
 public:
-    Q_INVOKABLE void append(QString file_absolute_path);
+    Q_INVOKABLE void appendByOne(QString file_absolute_path);
+    Q_INVOKABLE void append(QList<QUrl> file_absolute_paths);
     Q_INVOKABLE void remove(int index);
     Q_INVOKABLE void removeAll();
     Q_INVOKABLE void startUploadAll();
     Q_INVOKABLE void UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize = 1024 * 1024 * 60,qint64 offset = 0);
     Q_INVOKABLE void startUpLoadByIndex(int index);
-
+    Q_INVOKABLE void jumpToTransportPage();
+    Q_INVOKABLE void jumpToUploadStatusPage();
 
 private:
 
@@ -71,7 +74,8 @@ private:
     int getNewInfoIndex();
 signals:
     void signalUpLoadFailed(UP_LOAD_ERROR_TYPE errorType,int Http_Code = 404,QString errorInfo="UnKnow Error");
-
+    void signalJumpToTransportPage();
+    void signalJumpToUploadStatusPage();
 private:
     UpLoadfileInfoMode(QObject *parent = nullptr);
     static UpLoadfileInfoMode* Instance;

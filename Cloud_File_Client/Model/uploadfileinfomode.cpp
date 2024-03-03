@@ -1,5 +1,6 @@
 #include "uploadfileinfomode.h"
 
+
 #include <qfileinfo.h>
 #include <qhttpmultipart.h>
 #include <qnetworkaccessmanager.h>
@@ -79,7 +80,7 @@ QVariant UpLoadfileInfoMode::data(const QModelIndex &index, int role) const
  * @param
  * @return void
  */
-void UpLoadfileInfoMode::append(QString file_absolute_path)
+void UpLoadfileInfoMode::appendByOne(QString file_absolute_path)
 {
     emit beginInsertRows(QModelIndex(),upLoadInfoList.size(),upLoadInfoList.size());
     UpLoadInfo newInfo;
@@ -107,6 +108,40 @@ void UpLoadfileInfoMode::append(QString file_absolute_path)
 
     upLoadInfoList.append(newInfo);
     emit endInsertRows();
+    this->UploadOneFile(upLoadInfoList.last());
+}
+void UpLoadfileInfoMode::append(QList<QUrl> file_absolute_paths)
+{
+    for(auto fileAbsolutePath:file_absolute_paths)
+    {
+        emit beginInsertRows(QModelIndex(),upLoadInfoList.size(),upLoadInfoList.size());
+        UpLoadInfo newInfo;
+        QFileInfo newFileInfo(fileAbsolutePath.toString());
+        newInfo.fileAbsulotePath = fileAbsolutePath.toString().remove(0,8);
+        newInfo.fileName = newFileInfo.fileName(); ///2024-03-02 21:04:32 MrChen-H: get file name
+        for(int i=newInfo.fileName.size()-1;i>0;i--) ///2024-03-02 21:04:43 MrChen-H: get file suffix
+        {
+            if(newInfo.fileName[i] == '.')
+            {
+                newInfo.fileSuffix = newInfo.fileName.right(newInfo.fileName.size()-i);
+                break;
+            }
+        }
+        newInfo.countSize = newFileInfo.size();
+        if(upLoadInfoList.isEmpty())
+        {
+            newInfo.infoIndex = 0;
+        }
+        else
+        {
+            newInfo.infoIndex = upLoadInfoList.last().infoIndex+1;
+        }
+
+
+        upLoadInfoList.append(newInfo);
+        emit endInsertRows();
+    }
+
 }
 void UpLoadfileInfoMode::remove(int index)
 {
@@ -198,6 +233,16 @@ void UpLoadfileInfoMode::startUpLoadByIndex(int index)
             return;
         }
     }
+}
+
+void UpLoadfileInfoMode::jumpToTransportPage()
+{
+    emit signalJumpToTransportPage();
+}
+
+void UpLoadfileInfoMode::jumpToUploadStatusPage()
+{
+    emit signalJumpToUploadStatusPage();
 }
 
 

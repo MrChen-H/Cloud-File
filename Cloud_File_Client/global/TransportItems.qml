@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import FluentUI
 import  "../Page"
+import UpLoadfileInfoMode
 FluObject{
     property var navigationView
     property var paneItemMenu
@@ -28,6 +29,15 @@ FluObject{
                 item_UpLoadList.count = 0
             }
             navigationView.push(url)
+        }
+    }
+    Connections
+    {
+        target: UpLoadfileInfoMode
+        function onSignalJumpToUploadStatusPage()
+        {
+            navigationView.push("qrc:/Cloud_File_Client/Page/UpLoadStatusPage.qml")
+            navigationView.setCurrentIndex(1)
         }
     }
 }

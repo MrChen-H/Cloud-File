@@ -2,11 +2,22 @@
 
 import QtQuick
 import FluentUI
+import UpLoadfileInfoMode
 
 FluObject{
 
     property var navigationView
     property var paneItemMenu
+
+    Connections
+    {
+        target:UpLoadfileInfoMode
+        function onSignalJumpToTransportPage()
+        {
+            navigationView.push("qrc:/Cloud_File_Client/Page/TransportPage.qml")
+            navigationView.setCurrentIndex(2)
+        }
+    }
 
     FluPaneItem{
         id:item_home
@@ -51,5 +62,6 @@ FluObject{
             }
             navigationView.push(url)
         }
+
     }
 }

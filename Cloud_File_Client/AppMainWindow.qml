@@ -10,7 +10,7 @@ FluWindow
     objectName: 'mainWindow'
 
     // 避免双屏情景下的宽度溢出
-    minimumWidth: 800
+    minimumWidth: 1000
     minimumHeight: 400
     width: 1000
     height: 500
