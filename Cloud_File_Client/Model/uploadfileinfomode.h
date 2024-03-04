@@ -17,6 +17,7 @@ public:
     QString fileSuffix;
     int infoIndex;
     QString fileAbsulotePath;
+    bool isPause = true;
 
     ///2024-03-02 21:07:14 MrChen-H: These three members have default values at the time of creation
     float upLoadProess=0.0;
@@ -62,7 +63,8 @@ private:
         InfoIndexRole,
         UpLoadProessRole,
         UpLoadSpeedRole,
-        AlreadyUploadRole
+        AlreadyUploadRole,
+        IsPauseRole
     };
 
     enum UP_LOAD_ERROR_TYPE
@@ -80,6 +82,7 @@ private:
     UpLoadfileInfoMode(QObject *parent = nullptr);
     static UpLoadfileInfoMode* Instance;
     QList<UpLoadInfo> upLoadInfoList;
+
 };
 
 #endif // UPLOADFILEINFOMODE_H
