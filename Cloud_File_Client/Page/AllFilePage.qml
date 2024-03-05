@@ -409,12 +409,6 @@ FluContentPage {
             }
             onPressed:function(mouse)
             {
-                ///2024-03-03 23:42:26 MrChen-H: if right mouse button click and there is no click to item, show menu
-                for(var x = 0; x< selectItems.length;x++)
-                {
-                    selectItems[x].cancelSelect()
-                }
-                selectItems.length = 0
 
                 if(mouse.button === Qt.RightButton)
                 {
@@ -427,9 +421,7 @@ FluContentPage {
             {
                 mouse.accepted = false
             }
-
         }
-
     }
 
     /**
