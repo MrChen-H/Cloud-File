@@ -6,11 +6,20 @@
 #include <QUrl>
 #include "QTimer"
 
-class UpLoadInfo
+class UpLoadInfo:public QObject
 {
+    Q_OBJECT
 public:
     static QString getSpeedString(qint64 intSpeed);
     static QString byteToLagger(qint64 btyeSize);
+    UpLoadInfo(const UpLoadInfo &beCopy);
+    ~UpLoadInfo();
+    UpLoadInfo &operator=(const UpLoadInfo &beCopy);
+    explicit UpLoadInfo(QObject *parent = nullptr):QObject(parent){}
+
+signals:
+    void signalRemoveThisInfo();
+
 public:
     QString fileName;
     int countSize;

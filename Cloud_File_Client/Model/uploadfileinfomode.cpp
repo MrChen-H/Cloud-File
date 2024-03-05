@@ -149,8 +149,9 @@ void UpLoadfileInfoMode::append(QList<QUrl> file_absolute_paths)
 }
 void UpLoadfileInfoMode::remove(int index)
 {
+    emit this->upLoadInfoList[index].signalRemoveThisInfo();
     emit beginRemoveRows(QModelIndex(),index,index);
-    upLoadInfoList.removeAt(index);
+    this->upLoadInfoList.removeAt(index);
     emit endRemoveRows();
 
     for(int i=0;i<this->upLoadInfoList.size();i++)
@@ -200,9 +201,12 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
     QNetworkReply *reply = Upload_manager->post(request, multiPart);
     be_up_info.isStop = false;
     emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
-
     multiPart->setParent(reply);
+    connect(&be_up_info,&UpLoadInfo::signalRemoveThisInfo,this,[=]{
+        reply->abort();
+    });
     connect(reply, &QNetworkReply::uploadProgress, [&](qint64 bytesRead, qint64 totalBytes){
+
         if(be_up_info.isStop == true)
         {
             reply->abort();
@@ -228,9 +232,11 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
         emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
     });
 
-    connect(reply,&QNetworkReply::finished,[&]{//当服务器确定文件收到并在服务器创建资源时完成进度条并弹出提示框
-        auto get_server_message = reply->readAll();
-        qDebug()<<get_server_message;
+    connect(reply,&QNetworkReply::finished,[=]{//当服务器确定文件收到并在服务器创建资源时完成进度条并弹出提示框
+        if(reply->error() != QNetworkReply::OperationCanceledError)
+        {
+            qDebug()<<reply->readAll();
+        }
     });
 }
 
@@ -337,4 +343,43 @@ QString UpLoadInfo::byteToLagger(qint64 byteSize)
     {
         return QString("%1 Kb").arg(kb_m, 0, 'f', 1);
     }
+}
+
+UpLoadInfo::UpLoadInfo(const UpLoadInfo &beCopy)
+{
+    this->fileName = beCopy.fileName;
+    this->countSize =beCopy.countSize;
+    this->fileSuffix =beCopy.fileSuffix;
+    this->infoIndex =beCopy.infoIndex;
+    this->fileAbsulotePath =beCopy.fileAbsulotePath;
+    this->isStop =beCopy.isStop;
+
+    this->upLoadProess =beCopy.upLoadProess;
+    this->upLoadSize =beCopy.upLoadSize;
+    this->upLoadSpeed =beCopy.upLoadSpeed;
+    this->alreadyUpload =beCopy.alreadyUpload;
+    this->previousSecendUploadBytes =beCopy.previousSecendUploadBytes;
+
+}
+
+UpLoadInfo::~UpLoadInfo()
+{
+
+}
+
+UpLoadInfo &UpLoadInfo::operator=(const UpLoadInfo &beCopy)
+{
+    this->fileName = beCopy.fileName;
+    this->countSize =beCopy.countSize;
+    this->fileSuffix =beCopy.fileSuffix;
+    this->infoIndex =beCopy.infoIndex;
+    this->fileAbsulotePath =beCopy.fileAbsulotePath;
+    this->isStop =beCopy.isStop;
+
+    this->upLoadProess =beCopy.upLoadProess;
+    this->upLoadSize =beCopy.upLoadSize;
+    this->upLoadSpeed =beCopy.upLoadSpeed;
+    this->alreadyUpload =beCopy.alreadyUpload;
+    this->previousSecendUploadBytes =beCopy.previousSecendUploadBytes;
+    return *this;
 }

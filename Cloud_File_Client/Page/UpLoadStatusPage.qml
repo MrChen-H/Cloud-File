@@ -12,7 +12,7 @@ FluContentPage {
     FluContentDialog {
         id: make_sure_dialog
         title: "全部移除"
-        message: "确定要移除所有下载任务吗?这将会中断正在下载的项目"
+        message: "确定要移除所有上传任务吗?这将会中断正在上传的项目"
         buttonFlags:FluContentDialogType.NeutralButton
                      | FluContentDialogType.PositiveButton
 
@@ -22,6 +22,22 @@ FluContentPage {
         onPositiveClicked: {
             UpLoadfileInfoMode.removeAll();
             showInfo("已全部取消");
+        }
+    }
+    FluContentDialog {
+        id: cancelUploadTipBox
+        title: "取消上传"
+        message: "确定要取消该上传任务吗?"
+        buttonFlags:FluContentDialogType.NeutralButton
+                     | FluContentDialogType.PositiveButton
+
+        positiveText: "确定"
+        neutralText: "取消"
+        property var index: -1
+
+        onPositiveClicked: {
+            UpLoadfileInfoMode.remove(index)
+            showInfo("已取消");
         }
     }
 
@@ -41,6 +57,7 @@ FluContentPage {
             onClicked:
             {
                 UpLoadfileInfoMode.startUploadAll()
+                showInfo("已全部开始")
             }
         }
         FluIconButton
@@ -88,7 +105,7 @@ FluContentPage {
         delegate: FluArea
         {
             id:upLoadProcessItem
-            width: upLoadInfoList.width
+            width: upLoadInfoList.width-20
             height: 60
             FluIcon
             {
@@ -188,7 +205,6 @@ FluContentPage {
                     property var stop: isStop
                     onStopChanged:
                     {
-                        console.log(stop)
                         if(stop === true)
                         {
                             iconSource = FluentIcons.Play
@@ -205,7 +221,8 @@ FluContentPage {
                     iconSize: 10
                     onClicked:
                     {
-                        signaldeleteClick(upLoadProcessItem)
+                        cancelUploadTipBox.index = infoIndex
+                        cancelUploadTipBox.open()
                     }
                 }
             }
