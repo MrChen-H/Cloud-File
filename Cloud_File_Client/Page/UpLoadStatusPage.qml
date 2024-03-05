@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import FluentUI
 import QtQuick.Controls
 import QtQuick.Window
@@ -176,20 +176,27 @@ FluContentPage {
                     iconSize: 10
                     onClicked:
                     {
-                        if(iconSource === FluentIcons.Play)
+                        if(stop === false)
                         {
-                            iconSource = FluentIcons.Pause
-                            signalPauseClick(upLoadProcessItem)
-                            upLoadProcess.indeterminate = false
+                            UpLoadfileInfoMode.stopUploadByIndex(infoIndex)
                         }
                         else
                         {
-                            iconSource = FluentIcons.Play
-                            signalPlayClick(upLoadProcessItem)
-                            stateText.text ="暂停中"
-
+                            UpLoadfileInfoMode.startUpLoadByIndex(infoIndex)
                         }
-                        UpLoadfileInfoMode.startUpLoadByIndex(infoIndex)
+                    }
+                    property var stop: isStop
+                    onStopChanged:
+                    {
+                        console.log(stop)
+                        if(stop === true)
+                        {
+                            iconSource = FluentIcons.Play
+                        }
+                        else
+                        {
+                            iconSource = FluentIcons.Pause
+                        }
                     }
                 }
                 FluIconButton
@@ -201,10 +208,7 @@ FluContentPage {
                         signaldeleteClick(upLoadProcessItem)
                     }
                 }
-
             }
-
         }
-
     }
 }

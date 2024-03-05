@@ -1,4 +1,4 @@
-#include "uploadfileinfomode.h"
+﻿#include "uploadfileinfomode.h"
 
 
 #include <qfileinfo.h>
@@ -40,6 +40,7 @@ QHash<int, QByteArray> UpLoadfileInfoMode::roleNames() const
     roles[UpLoadProessRole] = "upLoadProess";
     roles[UpLoadSpeedRole] = "upLoadSpeed";
     roles[AlreadyUploadRole] = "alreadyUpload";
+    roles[IsStopRole] = "isStop";
     return roles;
 }
 
@@ -68,6 +69,8 @@ QVariant UpLoadfileInfoMode::data(const QModelIndex &index, int role) const
         return data.upLoadSpeed;
     case AlreadyUploadRole:
         return data.alreadyUpload;
+    case IsStopRole:
+        return data.isStop;
     default:
         return QVariant();
     }
@@ -116,9 +119,10 @@ void UpLoadfileInfoMode::append(QList<QUrl> file_absolute_paths)
     {
         emit beginInsertRows(QModelIndex(),upLoadInfoList.size(),upLoadInfoList.size());
         UpLoadInfo newInfo;
-        QFileInfo newFileInfo(fileAbsolutePath.toString());
         newInfo.fileAbsulotePath = fileAbsolutePath.toString().remove(0,8);
+        QFileInfo newFileInfo(newInfo.fileAbsulotePath);
         newInfo.fileName = newFileInfo.fileName(); ///2024-03-02 21:04:32 MrChen-H: get file name
+        newInfo.alreadyUpload = "0 Kb/ "+UpLoadInfo::byteToLagger(newFileInfo.size());
         for(int i=newInfo.fileName.size()-1;i>0;i--) ///2024-03-02 21:04:43 MrChen-H: get file suffix
         {
             if(newInfo.fileName[i] == '.')
@@ -172,6 +176,7 @@ void UpLoadfileInfoMode::startUploadAll()
 
 void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, qint64 offset)
 {
+
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     QHttpPart file_Part;
     QFile *file = new QFile(be_up_info.fileAbsulotePath);
@@ -193,9 +198,15 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
     request.setUrl(QUrl(REQUEST_UP_LOAD_FILE));//设置请求URL
     request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
     QNetworkReply *reply = Upload_manager->post(request, multiPart);
+    be_up_info.isStop = false;
+    emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
 
     multiPart->setParent(reply);
     connect(reply, &QNetworkReply::uploadProgress, [&](qint64 bytesRead, qint64 totalBytes){
+        if(be_up_info.isStop == true)
+        {
+            reply->abort();
+        }
         if(std::isnan(double(bytesRead)/double(totalBytes)) == true)
         {
             be_up_info.upLoadSpeed = "0 Kb/s";
@@ -217,7 +228,7 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
         emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
     });
 
-    connect(reply,&QNetworkReply::finished,[=]{//当服务器确定文件收到并在服务器创建资源时完成进度条并弹出提示框
+    connect(reply,&QNetworkReply::finished,[&]{//当服务器确定文件收到并在服务器创建资源时完成进度条并弹出提示框
         auto get_server_message = reply->readAll();
         qDebug()<<get_server_message;
     });
@@ -230,6 +241,7 @@ void UpLoadfileInfoMode::startUpLoadByIndex(int index)
         if(uploadInfo.infoIndex == index)
         {
             this->UploadOneFile(uploadInfo);
+
             return;
         }
     }
@@ -243,6 +255,19 @@ void UpLoadfileInfoMode::jumpToTransportPage()
 void UpLoadfileInfoMode::jumpToUploadStatusPage()
 {
     emit signalJumpToUploadStatusPage();
+}
+
+void UpLoadfileInfoMode::stopUploadByIndex(int index)
+{
+    for(auto& uploadInfo : upLoadInfoList)
+    {
+        if(uploadInfo.infoIndex == index)
+        {
+            uploadInfo.isStop = true;
+            emit dataChanged(createIndex(uploadInfo.infoIndex, 0), createIndex(uploadInfo.infoIndex, 0));
+            break;
+        }
+    }
 }
 
 

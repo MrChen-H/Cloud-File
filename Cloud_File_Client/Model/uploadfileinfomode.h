@@ -17,6 +17,7 @@ public:
     QString fileSuffix;
     int infoIndex;
     QString fileAbsulotePath;
+    bool isStop = true;
 
     ///2024-03-02 21:07:14 MrChen-H: These three members have default values at the time of creation
     float upLoadProess=0.0;
@@ -50,6 +51,7 @@ public:
     Q_INVOKABLE void startUpLoadByIndex(int index);
     Q_INVOKABLE void jumpToTransportPage();
     Q_INVOKABLE void jumpToUploadStatusPage();
+    Q_INVOKABLE void stopUploadByIndex(int index);
 
 private:
 
@@ -62,7 +64,8 @@ private:
         InfoIndexRole,
         UpLoadProessRole,
         UpLoadSpeedRole,
-        AlreadyUploadRole
+        AlreadyUploadRole,
+        IsStopRole
     };
 
     enum UP_LOAD_ERROR_TYPE
@@ -80,6 +83,7 @@ private:
     UpLoadfileInfoMode(QObject *parent = nullptr);
     static UpLoadfileInfoMode* Instance;
     QList<UpLoadInfo> upLoadInfoList;
+
 };
 
 #endif // UPLOADFILEINFOMODE_H
