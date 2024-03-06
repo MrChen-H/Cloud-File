@@ -12,11 +12,7 @@ UpLoadfileInfoMode* UpLoadfileInfoMode::Instance = new UpLoadfileInfoMode();
 
 UpLoadfileInfoMode::~UpLoadfileInfoMode()
 {
-    if(Instance!=nullptr)
-    {
-        delete Instance;
-        Instance = nullptr;
-    }
+
 }
 
 UpLoadfileInfoMode *UpLoadfileInfoMode::getInstance()
@@ -85,7 +81,7 @@ QVariant UpLoadfileInfoMode::data(const QModelIndex &index, int role) const
  */
 void UpLoadfileInfoMode::appendByOne(QString file_absolute_path)
 {
-    emit beginInsertRows(QModelIndex(),upLoadInfoList.size(),upLoadInfoList.size());
+    beginInsertRows(QModelIndex(),upLoadInfoList.size(),upLoadInfoList.size());
     UpLoadInfo newInfo;
     QFileInfo newFileInfo(file_absolute_path);
     newInfo.fileAbsulotePath = file_absolute_path.remove(0,8);
@@ -110,19 +106,19 @@ void UpLoadfileInfoMode::appendByOne(QString file_absolute_path)
 
 
     upLoadInfoList.append(newInfo);
-    emit endInsertRows();
+    endInsertRows();
     this->UploadOneFile(upLoadInfoList.last());
 }
 void UpLoadfileInfoMode::append(QList<QUrl> file_absolute_paths)
 {
-    for(auto fileAbsolutePath:file_absolute_paths)
+    for(auto& fileAbsolutePath:file_absolute_paths)
     {
-        emit beginInsertRows(QModelIndex(),upLoadInfoList.size(),upLoadInfoList.size());
+        beginInsertRows(QModelIndex(),upLoadInfoList.size(),upLoadInfoList.size());
         UpLoadInfo newInfo;
         newInfo.fileAbsulotePath = fileAbsolutePath.toString().remove(0,8);
         QFileInfo newFileInfo(newInfo.fileAbsulotePath);
         newInfo.fileName = newFileInfo.fileName(); ///2024-03-02 21:04:32 MrChen-H: get file name
-        newInfo.alreadyUpload = "0 Kb/ "+UpLoadInfo::byteToLagger(newFileInfo.size());
+        newInfo.alreadyUpload = "0 Kb/ "+UpLoadInfo::byteToLogger(newFileInfo.size());
         for(int i=newInfo.fileName.size()-1;i>0;i--) ///2024-03-02 21:04:43 MrChen-H: get file suffix
         {
             if(newInfo.fileName[i] == '.')
@@ -143,16 +139,16 @@ void UpLoadfileInfoMode::append(QList<QUrl> file_absolute_paths)
 
 
         upLoadInfoList.append(newInfo);
-        emit endInsertRows();
+        endInsertRows();
     }
 
 }
 void UpLoadfileInfoMode::remove(int index)
 {
     emit this->upLoadInfoList[index].signalRemoveThisInfo();
-    emit beginRemoveRows(QModelIndex(),index,index);
+    beginRemoveRows(QModelIndex(),index,index);
     this->upLoadInfoList.removeAt(index);
-    emit endRemoveRows();
+    endRemoveRows();
 
     for(int i=0;i<this->upLoadInfoList.size();i++)
     {
@@ -162,9 +158,9 @@ void UpLoadfileInfoMode::remove(int index)
 
 void UpLoadfileInfoMode::removeAll()
 {
-    emit beginResetModel();
+    beginResetModel();
     upLoadInfoList.clear();
-    emit endResetModel();
+    endResetModel();
 }
 
 void UpLoadfileInfoMode::startUploadAll()
@@ -205,8 +201,7 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
     connect(&be_up_info,&UpLoadInfo::signalRemoveThisInfo,this,[=]{
         reply->abort();
     });
-    connect(reply, &QNetworkReply::uploadProgress, [&](qint64 bytesRead, qint64 totalBytes){
-
+    connect(reply, &QNetworkReply::uploadProgress,this,[=,&be_up_info](qint64 bytesRead, qint64 totalBytes){
         if(be_up_info.isStop == true)
         {
             reply->abort();
@@ -218,6 +213,10 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
             return;
         }
         be_up_info.upLoadProess = double(bytesRead)/double(totalBytes);
+        if(bytesRead<0 || bytesRead - be_up_info.previousSecendUploadBytes < 0)
+        {
+            return;
+        }
         if(be_up_info.previousSecendUploadBytes == 0)
         {
             be_up_info.upLoadSpeed = UpLoadInfo::getSpeedString(bytesRead);
@@ -227,7 +226,7 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
             be_up_info.upLoadSpeed = UpLoadInfo::getSpeedString(bytesRead - be_up_info.previousSecendUploadBytes);
         }
         be_up_info.previousSecendUploadBytes = bytesRead;
-        be_up_info.alreadyUpload = UpLoadInfo::byteToLagger(bytesRead)+"/"+UpLoadInfo::byteToLagger(totalBytes);
+        be_up_info.alreadyUpload = UpLoadInfo::byteToLogger(bytesRead)+"/"+UpLoadInfo::byteToLogger(totalBytes);
 
         emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
     });
@@ -319,7 +318,7 @@ QString UpLoadInfo::getSpeedString(qint64 intSpeed)
     }
 }
 
-QString UpLoadInfo::byteToLagger(qint64 byteSize)
+QString UpLoadInfo::byteToLogger(qint64 byteSize)
 {
     if(byteSize<1024)
     {

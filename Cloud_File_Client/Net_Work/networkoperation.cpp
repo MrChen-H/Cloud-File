@@ -14,8 +14,6 @@
 NetWorkOperation::NetWorkOperation()
 {
     this->m_netWorkManager = new QNetworkAccessManager;
-
-
 }
 
 NetWorkOperation::~NetWorkOperation()
