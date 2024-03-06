@@ -23,12 +23,13 @@ Db_Operation* Db_Operation::instance = new Db_Operation();
 
 Db_Operation::~Db_Operation()
 {
+    mysql_close(mysql);
     if(mysql!=nullptr)
     {
         delete mysql;
         mysql = nullptr;
     }
-    mysql_close(mysql);
+    
 }
 
 Db_Operation::Db_Operation() {
