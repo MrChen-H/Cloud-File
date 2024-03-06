@@ -4,11 +4,7 @@ DownLoadStateModel* DownLoadStateModel::Instance = new DownLoadStateModel();
 
 DownLoadStateModel::~DownLoadStateModel()
 {
-    if(Instance!=nullptr)
-    {
-        delete Instance;
-        Instance = nullptr;
-    }
+
 }
 
 DownLoadStateModel *DownLoadStateModel::getInstance()
@@ -73,16 +69,16 @@ void DownLoadStateModel::updateInfo(int index, DownLoadInfo &Newinfo)
 
 void DownLoadStateModel::append(const DownLoadInfo& info)
 {
-    emit beginInsertRows(QModelIndex(),downLoadInfo.size(),downLoadInfo.size());
+    beginInsertRows(QModelIndex(),downLoadInfo.size(),downLoadInfo.size());
     downLoadInfo.append(info);
-    emit endInsertRows();
+    endInsertRows();
 }
 
 void DownLoadStateModel::remove(int index)
 {
-    emit beginRemoveRows(QModelIndex(),index,index);
+    beginRemoveRows(QModelIndex(),index,index);
     downLoadInfo.removeAt(index);
-    emit endRemoveRows();
+    endRemoveRows();
 
     for(int i=0;i<this->downLoadInfo.size();i++)
     {
@@ -93,9 +89,9 @@ void DownLoadStateModel::remove(int index)
 
 void DownLoadStateModel::removeAll()
 {
-    emit beginResetModel();
+    beginResetModel();
     downLoadInfo.clear();
-    emit endResetModel();
+    endResetModel();
 }
 
 DownLoadStateModel::DownLoadStateModel(QObject *parent)

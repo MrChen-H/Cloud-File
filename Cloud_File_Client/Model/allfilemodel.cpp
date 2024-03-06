@@ -4,11 +4,7 @@ AllFileModel * AllFileModel::Instance = new AllFileModel();
 
 AllFileModel::~AllFileModel()
 {
-    if(Instance!=nullptr)
-    {
-        delete Instance;
-        Instance = nullptr;
-    }
+
 }
 
 AllFileModel *AllFileModel::getInstance()
