@@ -11,7 +11,7 @@ class UpLoadInfo:public QObject
     Q_OBJECT
 public:
     static QString getSpeedString(qint64 intSpeed);
-    static QString byteToLagger(qint64 btyeSize);
+    static QString byteToLogger(qint64 btyeSize);
     UpLoadInfo(const UpLoadInfo &beCopy);
     ~UpLoadInfo();
     UpLoadInfo &operator=(const UpLoadInfo &beCopy);
