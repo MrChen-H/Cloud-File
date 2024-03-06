@@ -206,7 +206,7 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
     });
 
     be_up_info.processTimer.start(1000);
-    connect(&be_up_info.processTimer,&QTimer::timeout,this,[&](){
+    connect(&be_up_info.processTimer,&QTimer::timeout,this,[=,&be_up_info](){
         if(be_up_info.oneSecondReadSize!=0)
         {
             be_up_info.upLoadSpeed = UpLoadInfo::getSpeedString(be_up_info.oneSecondReadSize);
