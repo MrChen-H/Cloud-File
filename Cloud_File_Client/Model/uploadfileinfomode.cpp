@@ -352,7 +352,7 @@ QString UpLoadInfo::byteToLogger(qint64 byteSize)
         double mb_m = (double)kb_m/1024.0;
         if(mb_m>1024)
         {
-            double gb_m = (double)kb_m/1024.0;
+            double gb_m = (double)mb_m/1024.0;
             return QString("%1 Gb").arg(gb_m, 0, 'f', 1);
         }
         else
