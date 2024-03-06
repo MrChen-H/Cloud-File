@@ -20,14 +20,23 @@ FluContentPage {
         neutralText: "取消"
 
         onPositiveClicked: {
-            UpLoadfileInfoMode.removeAll();
-            showInfo("已全部取消");
+            if(UpLoadfileInfoMode.getExistingTaskSize() === 0)
+            {
+                showWarning("没有上传任务");
+            }
+            else
+            {
+                UpLoadfileInfoMode.removeAll();
+                showInfo("已全部移除");
+            }
+
+
         }
     }
     FluContentDialog {
         id: cancelUploadTipBox
-        title: "取消上传"
-        message: "确定要取消该上传任务吗?"
+        title: "移除任务"
+        message: "确定要移除该上传任务吗?"
         buttonFlags:FluContentDialogType.NeutralButton
                      | FluContentDialogType.PositiveButton
 
@@ -37,7 +46,7 @@ FluContentPage {
 
         onPositiveClicked: {
             UpLoadfileInfoMode.remove(index)
-            showInfo("已取消");
+            showInfo("已移除");
         }
     }
 
@@ -56,8 +65,16 @@ FluContentPage {
             }
             onClicked:
             {
-                UpLoadfileInfoMode.startUploadAll()
-                showInfo("已全部开始")
+                if(UpLoadfileInfoMode.getExistingTaskSize() === 0)
+                {
+                    showWarning("没有上传任务");
+                }
+                else
+                {
+                    UpLoadfileInfoMode.startUploadAll()
+                    showInfo("已全部开始")
+                }
+
             }
         }
         FluIconButton
@@ -69,6 +86,20 @@ FluContentPage {
                 text: "全部暂停"
                 visible: pauseAll.hovered
                 delay: 1000
+            }
+            onClicked:
+            {
+                if(UpLoadfileInfoMode.getExistingTaskSize() === 0)
+                {
+                    showWarning("没有正在上传的任务")
+                }
+                else
+                {
+                    UpLoadfileInfoMode.pauseAllTask()
+                    showInfo("已全部暂停")
+                }
+
+
             }
         }
         FluIconButton
@@ -115,22 +146,8 @@ FluContentPage {
                 x:10
                 Component.onCompleted:
                 {
-//                    if(fileType === "mp3")
-//                    {
-//                        iconSource = FluentIcons.MusicNote
-//                    }
-//                    else if(fileType === "mp4")
-//                    {
-//                        iconSource = FluentIcons.Video
-//                    }
-//                    else if(fileType === 'jpg')
-//                    {
-//                        iconSource = FluentIcons.Picture
-//                    }
-//                    else if(fileType === 'txt')
-//                    {
-                        iconSource = FluentIcons.Document
-//                    }
+
+                    iconSource = FluentIcons.Document
                 }
             }
 

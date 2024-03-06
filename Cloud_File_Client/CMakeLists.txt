@@ -46,6 +46,7 @@ qt_add_qml_module(appCloud_File_Client
     SOURCES
     SOURCES SERVER_CONFIG/SERVER_URLS.h
     SOURCES SERVER_CONFIG/SERVER_CONFIG.h
+    SOURCES Device/updatedevice.h Device/updatedevice.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

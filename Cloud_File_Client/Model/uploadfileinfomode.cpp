@@ -173,6 +173,8 @@ void UpLoadfileInfoMode::startUploadAll()
 
 void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, qint64 offset)
 {
+    be_up_info.oneSecondReadSize = 0;
+    be_up_info.previousSecendUploadBytes = 0;
 
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     QHttpPart file_Part;
@@ -198,12 +200,24 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
     be_up_info.isStop = false;
     emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
     multiPart->setParent(reply);
-    connect(&be_up_info,&UpLoadInfo::signalRemoveThisInfo,this,[=]{
+    connect(&be_up_info,&UpLoadInfo::signalRemoveThisInfo,this,[=,&be_up_info]{
+        be_up_info.processTimer.stop();
         reply->abort();
+    });
+
+    be_up_info.processTimer.start(1000);
+    connect(&be_up_info.processTimer,&QTimer::timeout,this,[&](){
+        if(be_up_info.oneSecondReadSize!=0)
+        {
+            be_up_info.upLoadSpeed = UpLoadInfo::getSpeedString(be_up_info.oneSecondReadSize);
+        }
+        emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
+        be_up_info.oneSecondReadSize = 0;
     });
     connect(reply, &QNetworkReply::uploadProgress,this,[=,&be_up_info](qint64 bytesRead, qint64 totalBytes){
         if(be_up_info.isStop == true)
         {
+            be_up_info.processTimer.stop();
             reply->abort();
         }
         if(std::isnan(double(bytesRead)/double(totalBytes)) == true)
@@ -217,14 +231,8 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
         {
             return;
         }
-        if(be_up_info.previousSecendUploadBytes == 0)
-        {
-            be_up_info.upLoadSpeed = UpLoadInfo::getSpeedString(bytesRead);
-        }
-        else
-        {
-            be_up_info.upLoadSpeed = UpLoadInfo::getSpeedString(bytesRead - be_up_info.previousSecendUploadBytes);
-        }
+
+        be_up_info.oneSecondReadSize = be_up_info.oneSecondReadSize + bytesRead - be_up_info.previousSecendUploadBytes;
         be_up_info.previousSecendUploadBytes = bytesRead;
         be_up_info.alreadyUpload = UpLoadInfo::byteToLogger(bytesRead)+"/"+UpLoadInfo::byteToLogger(totalBytes);
 
@@ -272,6 +280,20 @@ void UpLoadfileInfoMode::stopUploadByIndex(int index)
             emit dataChanged(createIndex(uploadInfo.infoIndex, 0), createIndex(uploadInfo.infoIndex, 0));
             break;
         }
+    }
+}
+
+int UpLoadfileInfoMode::getExistingTaskSize()
+{
+    return this->upLoadInfoList.size();
+}
+
+void UpLoadfileInfoMode::pauseAllTask()
+{
+    for(auto& info : this->upLoadInfoList)
+    {
+        info.isStop = true;
+        emit dataChanged(createIndex(info.infoIndex, 0), createIndex(info.infoIndex, 0));
     }
 }
 

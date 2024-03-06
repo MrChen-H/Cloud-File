@@ -34,6 +34,8 @@ public:
     QString upLoadSpeed="0 kb/s";
     QString alreadyUpload = "0 Kb/ 0 Kb";
     qint64 previousSecendUploadBytes=0;
+    qint64 oneSecondReadSize=0;
+    QTimer processTimer;
 };
 
 
@@ -61,7 +63,8 @@ public:
     Q_INVOKABLE void jumpToTransportPage();
     Q_INVOKABLE void jumpToUploadStatusPage();
     Q_INVOKABLE void stopUploadByIndex(int index);
-
+    Q_INVOKABLE int getExistingTaskSize();
+    Q_INVOKABLE void pauseAllTask();
 private:
 
 
