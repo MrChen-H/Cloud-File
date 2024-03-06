@@ -205,8 +205,7 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
     connect(&be_up_info,&UpLoadInfo::signalRemoveThisInfo,this,[=]{
         reply->abort();
     });
-    connect(reply, &QNetworkReply::uploadProgress, [&](qint64 bytesRead, qint64 totalBytes){
-
+    connect(reply, &QNetworkReply::uploadProgress, [=,&be_up_info](qint64 bytesRead, qint64 totalBytes){
         if(be_up_info.isStop == true)
         {
             reply->abort();
