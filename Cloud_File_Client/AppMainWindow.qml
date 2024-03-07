@@ -16,7 +16,6 @@ FluWindow
     height: 500
     visible: true
     title: "Test Window"
-    autoCenter: true
     showDark: false
 
     closeListener: function (event) {
