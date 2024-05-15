@@ -1,3 +1,4 @@
+*.pyc
 */bin/*
 */build/*
 *.json
@@ -6,3 +7,4 @@
 */.vscode/*
 */userFile/*
 */user_upload_file/*
+
