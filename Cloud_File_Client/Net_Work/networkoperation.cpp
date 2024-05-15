@@ -40,7 +40,6 @@ void NetWorkOperation::get(QUrl url)
 
 void NetWorkOperation::upLoadFile(QString filePathArray)
 {
-
     filePathArray.remove(0,8);
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     QHttpPart file_Part;
@@ -60,7 +59,7 @@ void NetWorkOperation::upLoadFile(QString filePathArray)
     multiPart->append(file_Part);
 
     QNetworkRequest request;
-    request.setUrl(QUrl("http://111.229.83.106/UploadFile"));//设置请求URL
+    request.setUrl(QUrl("http://111.229.83.106:8000/UploadFile"));//设置请求URL
     request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
     UpLoadInfo info;
     info.fileName = file_info.fileName().toUtf8();
@@ -88,24 +87,24 @@ void NetWorkOperation::getFileInfo(QNetworkReply *reply)
         QString  getInfo = reply->readAll();
         emit signalRequestEnd(getInfo,reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(),reply->errorString());
         json fileInfoJson;
+
         try {
             fileInfoJson = json::parse(getInfo.toStdString());
         } catch (const nlohmann::json::exception& e) {
             // 未能成功解析，可能是格式错误或其他问题
             return;
         }
-        for (auto& entry : fileInfoJson.items())
+        for (auto& entry : fileInfoJson)
         {
             // 遍历 JSON 对象中的每个键值对
-            std::string id = entry.key();  // 获取当前键，即 "6"、"7"、"8"
-            json fileData = entry.value(); // 获取对应的值，即每个文件对象
+            json fileData = entry; // 获取对应的值，即每个文件对象
             // 现在我们可以遍历文件对象的属性
             FileInfo info;
             info.fileName = QString::fromStdString(fileData["file_name"]);
             info.fileSize = QString::fromStdString(fileData["file_size"]).toInt();
-            info.fileType = QString::fromStdString(fileData["type_name"]);
+            info.fileType = QString::fromStdString(fileData["file_type"]);
             info.fileUrl = QString::fromStdString(fileData["file_dir"]);
-            info.id = QString::fromStdString(id);
+            info.id = QString::fromStdString(fileData["id"]);
             AllFileModel::getInstance()->append(info);
             // 如果需要进一步处理或存储这些信息，可以在上述提取后添加相应逻辑
         }
