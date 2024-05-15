@@ -28,7 +28,7 @@ FluContentPage {
 
     Component.onCompleted:
     {
-        netWork.get("http://111.229.83.106/GetFileInfo")
+        netWork.get("http://111.229.83.106:8000/GetFileInfo")
     }
     Connections
     {
@@ -198,7 +198,7 @@ FluContentPage {
         onClicked:
         {
             selectItems.length = 0
-            netWork.get("http://111.229.83.106/GetFileInfo");
+            netWork.get("http://111.229.83.106:8000/GetFileInfo");
         }
     }
     GridView
@@ -226,7 +226,7 @@ FluContentPage {
             ///2024-03-03 23:11:31 MrChen-H: Click reload button get file infomation to refresh the page
             onErrorClicked:
             {
-                netWork.get("http://111.229.83.106/GetFileInfo");
+                netWork.get("http://111.229.83.106:8000/GetFileInfo");
             }
         }
 

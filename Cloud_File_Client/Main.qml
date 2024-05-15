@@ -32,7 +32,7 @@ ApplicationWindow
         }
         // 初始化路径
         FluApp.initialRoute = "/"
+
         FluApp.run()
     }
-
 }

@@ -177,30 +177,29 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
     be_up_info.previousSecendUploadBytes = 0;
 
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-    QHttpPart file_Part;
+
+    QHttpPart filePart;
     QFile *file = new QFile(be_up_info.fileAbsulotePath);
-    QFileInfo file_info(*file);
+    QFileInfo fileInfo(*file);
     file->open(QIODevice::ReadOnly);
 
-    QNetworkAccessManager *Upload_manager = new QNetworkAccessManager(this);
+    filePart.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, "form-data; filename=\"" + fileInfo.fileName().toUtf8() + "\"; name=\"file\"");
+    filePart.setBodyDevice(file);
+    file->setParent(multiPart);
+    multiPart->append(filePart);
 
-    //    QByteArray bytes = file->readAll();//读取文件内容
-    QString arg = QString("form-data;filename=\"%1\";file_size=\"%2\";")\
-                      .arg(file_info.fileName().toUtf8())\
-                      .arg(file_info.size());
-    file_Part.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant(arg));
-    file_Part.setBodyDevice(file);//设置传输数据
-    file->setParent(multiPart);//文件指针在multiPart析构时关闭文件同时析构
-    multiPart->append(file_Part);
-
+    QNetworkAccessManager *uploadManager = new QNetworkAccessManager(this);
     QNetworkRequest request;
-    request.setUrl(QUrl(REQUEST_UP_LOAD_FILE));//设置请求URL
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
-    QNetworkReply *reply = Upload_manager->post(request, multiPart);
+    request.setUrl(QUrl(REQUEST_UP_LOAD_FILE));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data; boundary=" + multiPart->boundary());
+
+    QNetworkReply *reply = uploadManager->post(request, multiPart);
     be_up_info.isStop = false;
     emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
     multiPart->setParent(reply);
-    connect(&be_up_info,&UpLoadInfo::signalRemoveThisInfo,this,[=,&be_up_info]{
+
+    connect(&be_up_info, &UpLoadInfo::signalRemoveThisInfo, this, [=, &be_up_info] {
         be_up_info.processTimer.stop();
         reply->abort();
     });
