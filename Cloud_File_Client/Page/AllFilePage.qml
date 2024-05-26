@@ -338,7 +338,7 @@ FluContentPage {
                         ///2024-03-03 23:33:44 MrChen-H: if left mouse button click and this item already be selected
                         if(select_statue.visible)
                         {
-                            ///2024-03-03 23:33:44 MrChen-H: There are two possibilities
+                            ///2024-03 -03 23:33:44 MrChen-H: There are two possibilities
                             ///     1.only this item be selected and user want cancel selected statu by clicked again 是只有该item被选中想再次点击来取消选中
                             ///     2.this item and other item selected together, at this time click this item should cancel all items selected statu an selected this item  是该Item与其他多个Item一起被选中此时点击该item应取消所有被选中的item的选中状态并选中当前item
                             for(var i = 0;i<selectItems.length;i++)

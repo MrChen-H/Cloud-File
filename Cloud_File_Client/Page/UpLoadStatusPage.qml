@@ -129,7 +129,6 @@ FluContentPage {
         {
             bottom:parent.bottom
         }
-
         model: UpLoadfileInfoMode
         ScrollBar.vertical: FluScrollBar {}
 
@@ -138,6 +137,7 @@ FluContentPage {
             id:upLoadProcessItem
             width: upLoadInfoList.width-20
             height: 60
+
             FluIcon
             {
                 id:fileIcon
@@ -185,6 +185,7 @@ FluContentPage {
                 }
                 indeterminate: false
                 value:upLoadProess
+                color: FluTheme.primaryColor
             }
             FluText {
                 id:stateText
@@ -206,6 +207,7 @@ FluContentPage {
                 anchors.verticalCenter: parent.verticalCenter
                 FluIconButton
                 {
+                    id:pauseButton
                     iconSource:FluentIcons.Play
                     iconSize: 10
                     onClicked:
@@ -234,14 +236,45 @@ FluContentPage {
                 }
                 FluIconButton
                 {
+                    id:cancelButton
                     iconSource:FluentIcons.Cancel
                     iconSize: 10
                     onClicked:
                     {
+                        if(iconSource == FluentIcons.CheckMark)
+                        {
+                            UpLoadfileInfoMode.remove(infoIndex)
+                            return
+                        }
                         cancelUploadTipBox.index = infoIndex
                         cancelUploadTipBox.open()
                     }
                 }
+            }
+
+            function changeUploadStatue(isSuccess)
+            {
+                if(isSuccess === true)
+                {
+                    upLoadProcess.color = FluTheme.primaryColor
+                    cancelButton.iconSource = FluentIcons.CheckMark
+                    pauseButton.opacity= 0
+                    pauseButton.enabled = false
+                }
+                else
+                {
+                    upLoadProcess.color = "#A9A9A9"
+                    pauseButton.iconSource = FluentIcons.Refresh
+                }
+            }
+        }
+        Connections
+        {
+            target: UpLoadfileInfoMode
+
+            function onSignalFileUploadFinish(index,isSuccess)
+            {
+                upLoadInfoList.itemAtIndex(index).changeUploadStatue(isSuccess);
             }
         }
     }

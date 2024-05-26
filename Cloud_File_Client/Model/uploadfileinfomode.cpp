@@ -1,12 +1,12 @@
-﻿#include "uploadfileinfomode.h"
-
-
+﻿ #include "uploadfileinfomode.h"
 #include <qfileinfo.h>
 #include <qhttpmultipart.h>
 #include <qnetworkaccessmanager.h>
 #include <qnetworkreply.h>
 #include "./SERVER_CONFIG/SERVER_URLS.h"
 #include <QtWidgets/qapplication.h>
+#include "json.hpp"
+using Json = nlohmann::json;
 
 UpLoadfileInfoMode* UpLoadfileInfoMode::Instance = new UpLoadfileInfoMode();
 
@@ -37,6 +37,7 @@ QHash<int, QByteArray> UpLoadfileInfoMode::roleNames() const
     roles[UpLoadSpeedRole] = "upLoadSpeed";
     roles[AlreadyUploadRole] = "alreadyUpload";
     roles[IsStopRole] = "isStop";
+    roles[UpLoadStatue]="isSuccess";
     return roles;
 }
 
@@ -67,6 +68,8 @@ QVariant UpLoadfileInfoMode::data(const QModelIndex &index, int role) const
         return data.alreadyUpload;
     case IsStopRole:
         return data.isStop;
+    case UpLoadStatue:
+        return data.successful;
     default:
         return QVariant();
     }
@@ -182,9 +185,11 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
     QFile *file = new QFile(be_up_info.fileAbsulotePath);
     QFileInfo fileInfo(*file);
     file->open(QIODevice::ReadOnly);
-
+    QString arg = QString("form-data;filename=\"%1\";file_size=\"%2\";name=\"file\"")\
+                      .arg(fileInfo.fileName().toUtf8())\
+                      .arg(fileInfo.size());
     filePart.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
-    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, "form-data; filename=\"" + fileInfo.fileName().toUtf8() + "\"; name=\"file\"");
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, arg);
     filePart.setBodyDevice(file);
     file->setParent(multiPart);
     multiPart->append(filePart);
@@ -199,13 +204,13 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
     emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
     multiPart->setParent(reply);
 
-    connect(&be_up_info, &UpLoadInfo::signalRemoveThisInfo, this, [=, &be_up_info] {
+    connect(&be_up_info, &UpLoadInfo::signalRemoveThisInfo, this, [=,this,&be_up_info] {
         be_up_info.processTimer.stop();
         reply->abort();
     });
 
     be_up_info.processTimer.start(1000);
-    connect(&be_up_info.processTimer,&QTimer::timeout,this,[=,&be_up_info](){
+    connect(&be_up_info.processTimer,&QTimer::timeout,this,[=,this,&be_up_info](){
         if(be_up_info.oneSecondReadSize!=0)
         {
             be_up_info.upLoadSpeed = UpLoadInfo::getSpeedString(be_up_info.oneSecondReadSize);
@@ -213,7 +218,7 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
         emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
         be_up_info.oneSecondReadSize = 0;
     });
-    connect(reply, &QNetworkReply::uploadProgress,this,[=,&be_up_info](qint64 bytesRead, qint64 totalBytes){
+    connect(reply, &QNetworkReply::uploadProgress,this,[=,this,&be_up_info](qint64 bytesRead, qint64 totalBytes){
         if(be_up_info.isStop == true)
         {
             be_up_info.processTimer.stop();
@@ -238,10 +243,37 @@ void UpLoadfileInfoMode::UploadOneFile(UpLoadInfo &be_up_info,qint64 chunkSize, 
         emit dataChanged(createIndex(be_up_info.infoIndex, 0), createIndex(be_up_info.infoIndex, 0));
     });
 
-    connect(reply,&QNetworkReply::finished,[=]{//当服务器确定文件收到并在服务器创建资源时完成进度条并弹出提示框
+    connect(reply,&QNetworkReply::finished,[=,this,&be_up_info]{//当服务器确定文件收到并在服务器创建资源时完成进度条并弹出提示框
         if(reply->error() != QNetworkReply::OperationCanceledError)
         {
-            qDebug()<<reply->readAll();
+            QString replyInfo = reply->readAll();
+            if(replyInfo.isEmpty() == false)
+            {
+                be_up_info.processTimer.stop();
+                try
+                {
+                    Json replyJson = Json::parse(replyInfo.toStdString());
+                    if(replyJson["status"] != "success")
+                    {
+                        emit this->signalFileUploadFinish(this->upLoadInfoList.indexOf(be_up_info),false);
+                    }
+                    else
+                    {
+                        emit this->signalFileUploadFinish(this->upLoadInfoList.indexOf(be_up_info),true);
+                    }
+                    std::string message = replyJson["message"];
+                    qDebug()<<QString::fromStdString(message);
+                }
+                catch (std::exception& e)
+                {
+                    emit this->signalFileUploadFinish(this->upLoadInfoList.indexOf(be_up_info),false);
+                    qDebug()<<e.what();
+                }
+            }
+        }
+        else
+        {
+            qDebug()<<reply->error();
         }
     });
 }
@@ -379,6 +411,7 @@ UpLoadInfo::UpLoadInfo(const UpLoadInfo &beCopy)
     this->upLoadSpeed =beCopy.upLoadSpeed;
     this->alreadyUpload =beCopy.alreadyUpload;
     this->previousSecendUploadBytes =beCopy.previousSecendUploadBytes;
+    this->successful = beCopy.successful;
 
 }
 
@@ -401,5 +434,18 @@ UpLoadInfo &UpLoadInfo::operator=(const UpLoadInfo &beCopy)
     this->upLoadSpeed =beCopy.upLoadSpeed;
     this->alreadyUpload =beCopy.alreadyUpload;
     this->previousSecendUploadBytes =beCopy.previousSecendUploadBytes;
+    this->successful = beCopy.successful;
     return *this;
+}
+
+bool UpLoadInfo::operator==(const UpLoadInfo &beComp)const
+{
+    if(this->infoIndex == beComp.infoIndex)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }

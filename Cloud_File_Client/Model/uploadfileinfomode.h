@@ -15,6 +15,7 @@ public:
     UpLoadInfo(const UpLoadInfo &beCopy);
     ~UpLoadInfo();
     UpLoadInfo &operator=(const UpLoadInfo &beCopy);
+    bool operator==(const UpLoadInfo& beComp)const;
     explicit UpLoadInfo(QObject *parent = nullptr):QObject(parent){}
 
 signals:
@@ -36,6 +37,7 @@ public:
     qint64 previousSecendUploadBytes=0;
     qint64 oneSecondReadSize=0;
     QTimer processTimer;
+    bool successful = false;
 };
 
 
@@ -77,7 +79,8 @@ private:
         UpLoadProessRole,
         UpLoadSpeedRole,
         AlreadyUploadRole,
-        IsStopRole
+        IsStopRole,
+        UpLoadStatue
     };
 
     enum UP_LOAD_ERROR_TYPE
@@ -91,6 +94,7 @@ signals:
     void signalUpLoadFailed(UP_LOAD_ERROR_TYPE errorType,int Http_Code = 404,QString errorInfo="UnKnow Error");
     void signalJumpToTransportPage();
     void signalJumpToUploadStatusPage();
+    void signalFileUploadFinish(int index,bool isSuccess);
 private:
     UpLoadfileInfoMode(QObject *parent = nullptr);
     static UpLoadfileInfoMode* Instance;
