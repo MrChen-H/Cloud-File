@@ -70,3 +70,8 @@ def uploadfile(request):
             return JsonResponse({"status": "error", "message": "No file was uploaded."}, status=400)
     else:
         return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
+
+def get_phone_code(request):
+    phone = request.POST.get("phone")
+def reg_account(request):
+    a
