@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
+import qrcode
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'phonenumber_field',
     'Server',
 ]
 
@@ -77,11 +77,17 @@ WSGI_APPLICATION = 'Cloud_File_Server_Python.wsgi.application'
 
 DATABASES = {
     'default': {
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
         'ENGINE': 'django.db.backends.mysql',#数据库类型
-        'NAME': 'Cloud_File_Server_DB',#数据库名字
-        'USER':'root',#自己数据库用户名
-        'PASSWORD':'chh20020729',#自己的数据库的密码
-        'PORT':'3306'#mysql数据库端口，一般为3306，如果不是请修改
+
+        #'NAME': 'Cloud_File_Server_DB',#数据库名字
+        #'USER':'root',#自己数据库用户名
+        #'PASSWORD':'root',#自己的数据库的密码
+        #'PORT':'3306'#mysql数据库端口，一般为3306，如果不是请修改
     }
 }
 
@@ -108,13 +114,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

@@ -1,7 +1,6 @@
 from django.db import models
 import uuid
 import random
-from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import RegexValidator
 
 # Create your models here.
@@ -37,11 +36,17 @@ class UserInfo(models.Model):
         verbose_name="账号",  # 友好的字段名称
         help_text="系统自动生成的16位数字账号",
         max_length=16)
-
-    phone_number = PhoneNumberField(validators=[RegexValidator(
-        regex=r'^\+?1?\d{9,15}$',
-        message="手机号格式不正确",
-    )])
-
     user_password = models.CharField(null=False,max_length=16)
+    phone_number = models.CharField(max_length=50)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+class UserFileInfo(models.Model):
+    file_id = models.CharField(max_length=50,default=uuid.uuid4,primary_key=True,verbose_name="文件ID")
+    file_org_name = models.CharField(max_length=255)
+    file_server_name = models.CharField(max_length=255)
+    file_size = models.CharField(max_length=255)
+    file_path = models.CharField(max_length=255)
+    file_md5 = models.CharField(max_length=50)
+    file_finish_time = models.DateTimeField(null=True)
+    has_qr_code = models.BooleanField(default=False)
     

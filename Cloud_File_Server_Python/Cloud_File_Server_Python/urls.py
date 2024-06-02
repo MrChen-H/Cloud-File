@@ -20,6 +20,10 @@ from Server import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('GetFileInfo/',views.getfileinfo,name='GetFileInfo'),
-    path('UploadFile/', views.uploadfile, name='GetFileInfo')
+    path('GetFileInfo/',views.getfileinfo),
+    path('UploadFile/', views.uploadfile),
+    path('RegisterUser/',views.reg_account),
+    path('SignIn/',views.user_sign_in),
+    path('GetUserInfo/',views.getUserInfo),
+    path('CheckFile/',views.chech_file)
 ]
