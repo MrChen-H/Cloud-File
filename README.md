@@ -2,7 +2,8 @@
 This is a Cloud file storage project,this project include a server and a client   
 support multi-thread
 
-# Preview   
+# Preview
+![](https://github.com/MrChen-H/Cloud-File/blob/main/resource/Privew.gif)
 ## Upload
 - ### Add an upload task to the upload task queue and uploading by now
 ![](https://github.com/MrChen-H/Cloud-File/blob/main/resource/UpLoad_one.gif)   
